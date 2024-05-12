@@ -94,3 +94,33 @@ export async function getDistrict(
   }
   return data[0];
 }
+
+/**
+ * Get all districts in the city.
+ * @param supabase - The Supabase client.
+ * @param city_id - The ID of the city.
+ * @param city_name - The name of the city.
+ * @returns An array of districts in the city.
+ * @throws If neither city_id nor city_name is provided.
+ */
+export async function getAllDistrictsInCity(
+  supabase: SupabaseClient,
+  city_id?: string,
+  city_name?: string
+): Promise<District[]> {
+  if (!city_id && !city_name) {
+    throw new Error("City ID or City Name must be provided");
+  }
+
+  const filterType = city_id ? "in_city" : "city_name";
+  const filterValue = city_id ? city_id : city_name;
+
+  const { data, error } = await supabase
+    .from("district")
+    .select("*")
+    .eq(filterType, filterValue);
+  if (error) {
+    throw error;
+  }
+  return data;
+}
