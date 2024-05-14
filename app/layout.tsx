@@ -3,12 +3,15 @@ import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+  : "http://localhost:8888";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
+  title: "Lost & Found",
   description: "The fastest way to build apps with Next.js and Supabase",
+  icons: {
+    icon: '/app_images/icon.png',
+  }
 };
 
 export default function RootLayout({
