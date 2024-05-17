@@ -5,7 +5,7 @@ import { createCityDistrict } from '@/lib/city_district/utils';
 import { createClient } from '@/utils/supabase/server';
 import { fetchUser } from '@/utils/user_management';
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<NextResponse> {
 	// const cookieStore = cookies();
     const { searchParams } = new URL(request.url); 
 	const supabase = createClient();
