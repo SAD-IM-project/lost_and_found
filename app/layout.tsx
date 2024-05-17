@@ -27,11 +27,13 @@ export default function RootLayout({
       <body className="bg-background text-foreground">
         <main className="min-h-screen w-full flex flex-col items-center border-2 border-blue-500">
           <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 border-2 border-blue-500 justify-between w-full relative">
-            <div className="flex items-center gap-2 text-lg font-semibold md:text-base ">
+            {/* <div className="flex items-center gap-2 text-lg font-semibold md:text-base "> */}
+            <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
               <Package2 className="h-6 w-6" />
               <span className="sr-only">Acme Inc</span>
               lost & Found
-            </div>
+            </nav>
+            {/* </div> */}
             <div className="absolute inset-0 flex justify-center items-center">
               <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
                 <Link
@@ -74,6 +76,6 @@ export default function RootLayout({
           </div>
         </main>
       </body>
-    </html>
+    </html >
   );
 }
