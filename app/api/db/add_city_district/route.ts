@@ -5,6 +5,15 @@ import { createCityDistrict } from '@/lib/city_district/utils';
 import { createClient } from '@/utils/supabase/server';
 import { fetchUser } from '@/utils/user_management';
 
+/**
+ * Create a new city and district in the database.
+ * url - /api/db/add_city_district?city=xxx&district=xxx
+ * method - POST
+ * 
+ * @param request - The incoming request object.
+ * @returns The response object.
+ * @throws If there is an error during the upsert operation.
+ */
 export async function POST(request: NextRequest): Promise<NextResponse> {
 	// const cookieStore = cookies();
     const { searchParams } = new URL(request.url); 

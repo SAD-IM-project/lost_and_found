@@ -1,11 +1,10 @@
-import { createCategory } from "@/lib/category/utils";
+import { renameCategory } from "@/lib/category/utils";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
-import { Result } from "postcss";
 
 /**
- * Create a new category in the database.
- * url - /api/category/create?category_name=xxx&sub_of=xxx
+ * rename a category in the database.
+ * url - /api/category/rename?original_name=xxx&new_name=xxx
  * method - POST
  * 
  * @param request - The incoming request object.
@@ -17,15 +16,15 @@ export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
   console.log(searchParams);
 
-  const category_name = searchParams.get("category_name");
-  const sub_of = searchParams.get("sub_of");
+  const original_name = searchParams.get("original_name");
+  const new_name = searchParams.get("new_name");
 
-  if (!category_name){
-    return NextResponse.json({message: 'category_name is required'}, {status:400 });
+  if (!original_name || !new_name){
+    return NextResponse.json({message: 'original_name and new_name is required'}, {status:400 });
   }
 
   try{
-    const data = await createCategory(supabase, category_name, sub_of? sub_of: undefined);
+    const data = await renameCategory(supabase, original_name, new_name);
     return NextResponse.json(data, {status:200 });
   }
   catch(error){
