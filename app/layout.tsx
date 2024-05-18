@@ -1,8 +1,8 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
-import Link from "next/link"
-import { CircleUser, Menu, Package2, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import Link from "next/link";
+import { Package2, Search, CircleUser } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -14,7 +14,7 @@ export const metadata = {
   description: "The fastest way to build apps with Next.js and Supabase",
   icons: {
     icon: '/app_images/icon.png',
-  }
+  },
 };
 
 export default function RootLayout({
@@ -25,32 +25,35 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
-        <main className="min-h-screen w-full flex flex-col items-center border-2 border-blue-500">
-          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 border-2 border-blue-500 justify-between w-full relative">
-            {/* <div className="flex items-center gap-2 text-lg font-semibold md:text-base "> */}
+        <main className="min-h-screen w-full flex flex-col items-center">
+          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full relative bg-white">
             <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
-              <Package2 className="h-6 w-6" />
-              <span className="sr-only">Acme Inc</span>
-              lost & Found
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
+                style={{ zIndex: 10 }} // Ensuring it is on top
+              >
+                <Package2 className="h-6 w-6" />
+                Lost & Found
+              </Link>
             </nav>
-            {/* </div> */}
-            <div className="absolute inset-0 flex justify-center items-center">
-              <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
+            <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
+              <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 pointer-events-auto">
                 <Link
-                  href="#"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  href="/all"
+                  className="text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                 >
                   All
                 </Link>
                 <Link
-                  href="#"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  href="/lost"
+                  className="text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                 >
                   Lost
                 </Link>
                 <Link
-                  href="#"
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  href="/found"
+                  className="text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                 >
                   Found
                 </Link>
@@ -66,8 +69,13 @@ export default function RootLayout({
                 />
               </div>
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
-                <Package2 className="h-6 w-6" />
-                <span className="sr-only">Acme Inc1</span>
+                <Link
+                  href="user"
+                  className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
+                  style={{ zIndex: 10 }} // Ensuring it is on top
+                >
+                  <CircleUser className="h-7 w-7" />
+                </Link>
               </nav>
             </form>
           </header>
@@ -76,6 +84,6 @@ export default function RootLayout({
           </div>
         </main>
       </body>
-    </html >
+    </html>
   );
 }
