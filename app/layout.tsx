@@ -1,8 +1,10 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Link from "next/link";
-import { Package2, Search, CircleUser } from "lucide-react";
+import { Package2, Search, CircleUser, CirclePlus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { DatePickerWithRange } from "@/components/ui/date-picker-with-range";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -64,8 +66,8 @@ export default function RootLayout({
                 <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search products..."
-                  className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+                  placeholder="Search..."
+                  className="pl-8 sm:w-[50px] md:w-[200px] lg:w-[300px]"
                 />
               </div>
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
@@ -79,8 +81,19 @@ export default function RootLayout({
               </nav>
             </form>
           </header>
-          <div className="w-3/5 flex-grow overflow-auto border-2 border-red-500">
-            {children}
+          <div className="w-full flex flex-row">
+            <div className="w-3/7 flex-grow overflow-auto gap-2 py-4 px-4 border-2 border-red-500">
+              <span>Date:</span>
+              {<DatePickerWithRange className="mt-4" />}
+            </div>
+            <div className="w-3/7 flex-grow overflow-auto border-2 border-red-500">
+              {children}
+            </div>
+            <div className="w-1/7 flex-grow overflow-auto flex justify-center py-4 border-2 border-red-500">
+              <Button variant="ghost" size="icon">
+                <CirclePlus className="h-6 w-6" />
+              </Button>
+            </div>
           </div>
         </main>
       </body>
