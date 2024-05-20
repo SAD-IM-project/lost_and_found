@@ -58,15 +58,13 @@ export default function Home() {
     category: 'all',
     type: 'all'
   });
-  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const filteredPosts = objects.filter(post => {
     const districtMatch = filters.district === 'all' || post.in_district.some(d => districts[d - 1] === filters.district);
     const categoryMatch = filters.category === 'all' || post.category_id.some(c => categories[c - 1] === filters.category);
     const typeMatch = filters.type === 'all' || post.type === filters.type;
-    const searchMatch = post.object_name.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return districtMatch && categoryMatch && typeMatch && searchMatch;
+    return districtMatch && categoryMatch && typeMatch;
   });
 
   const handleDistrictFilter = (district: string) => {
@@ -83,7 +81,6 @@ export default function Home() {
 
   const handleClearFilters = () => {
     setFilters({ district: 'all', category: 'all', type: 'all' });
-    setSearchTerm('');
   };
 
   return (
@@ -171,7 +168,7 @@ export default function Home() {
 
       {/* 中間的 post 列表 */}
       <div className="w-2/4 bg-white overflow-y-scroll p-4">
-        <div className="mb-4 flex items-center">
+        {/* <div className="mb-4 flex items-center">
           <input
             type="text"
             placeholder="搜尋文章名稱..."
@@ -179,7 +176,7 @@ export default function Home() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="border border-gray-300 px-3 py-2 rounded-md w-full"
           />
-        </div>
+        </div> */}
         <h2 className="text-xl font-bold mb-4">Post 列表</h2>
         <div className="mb-4 flex space-x-4">
           <button
