@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen w-full flex flex-col items-center">
-          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white">
+          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white z-50">
             <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
               <Link
                 href="/"
@@ -88,7 +88,7 @@ export default function RootLayout({
               <span>Date:</span>
               {<DatePickerWithRange className="mt-4" />}
             </div>
-            <div className="flex-grow overflow-auto ">
+            <div className="flex-grow overflow-auto z-0">
               {children}
             </div>
             <div className="overflow-auto flex flex-col items-center py-4 gap-3 w-20">
