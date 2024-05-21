@@ -1,10 +1,12 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Link from "next/link";
-import { Package2, Search, CircleUser, CirclePlus } from "lucide-react";
+import { Package2, Search, CircleUser, CirclePlus, Bell, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePickerWithRange } from "@/components/ui/date-picker-with-range";
+import Image from "next/image"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -28,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen w-full flex flex-col items-center">
-          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full relative bg-white">
+          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white">
             <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
               <Link
                 href="/"
@@ -81,17 +83,23 @@ export default function RootLayout({
               </nav>
             </form>
           </header>
-          <div className="w-full flex flex-row">
-            <div className="w-3/7 flex-grow overflow-auto gap-2 py-4 px-4 border-2 border-red-500">
+          <div className="w-full flex flex-row relative">
+            <div className="w-96 overflow-auto gap-2 py-4 px-4">
               <span>Date:</span>
               {<DatePickerWithRange className="mt-4" />}
             </div>
-            <div className="w-3/7 flex-grow overflow-auto border-2 border-red-500">
+            <div className="flex-grow overflow-auto ">
               {children}
             </div>
-            <div className="w-1/7 flex-grow overflow-auto flex justify-center py-4 border-2 border-red-500">
+            <div className="overflow-auto flex flex-col items-center py-4 gap-3 w-20">
               <Button variant="ghost" size="icon">
-                <CirclePlus className="h-6 w-6" />
+                <CirclePlus className="h-7 w-7" />
+              </Button>
+              <Button variant='ghost' size='icon'>
+                <Bell className="h-7 w-7" />
+              </Button>
+              <Button variant='ghost' size='icon'>
+                <Mail className="h-7 w-7" />
               </Button>
             </div>
           </div>
