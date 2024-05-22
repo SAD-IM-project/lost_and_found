@@ -13,7 +13,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import Select, { MultiValue, ActionMeta, GroupBase } from 'react-select';
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import queryString from "query-string"
 
 // 定義選項類型
@@ -138,10 +138,12 @@ export function Filter({
     }
 
     const router = useRouter()
+    const searchParams = useSearchParams();
     const handleApply = () => {
         setIsPopoverOpen(false)
-        setIsPopoverOpen(false)
+        const currentQuery = queryString.parse(searchParams.toString());
         const query = {
+            ...currentQuery,
             date: date ? `${format(date.from!, 'yyyy-MM-dd')}-${format(date.to!, 'yyyy-MM-dd')}` : undefined,
             subCategories: selectedSubCategories.map(sub => sub.value).join(','),
             districts: selectedDistricts.map(district => district.value).join(',')

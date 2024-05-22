@@ -3,6 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 import { Package2, Search, CircleUser, CirclePlus, Bell, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import SearchForm, { searchForm } from "@/components/ui/searchForm";
 import { Button } from "@/components/ui/button";
 import { Filter } from "@/components/ui/filter";
 import Image from "next/image";
@@ -63,15 +64,8 @@ export default function RootLayout({
                 </Link>
               </nav>
             </div>
-            <form className="flex items-center flex-1 sm:flex-initial justify-between">
-              <div className="relative flex-grow mr-4">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="pl-8 sm:w-[50px] md:w-[200px] lg:w-[300px]"
-                />
-              </div>
+            <div className="flex items-center flex-1 sm:flex-initial justify-between">
+              <SearchForm />
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
                 <Link
                   href="user"
@@ -81,7 +75,7 @@ export default function RootLayout({
                   <CircleUser className="h-7 w-7" />
                 </Link>
               </nav>
-            </form>
+            </div>
           </header>
           <div className="w-full flex flex-row relative">
             <div className="w-96 sticky top-16 overflow-auto space-y-2 py-4 px-4 h-[calc(100vh-4rem)]">
