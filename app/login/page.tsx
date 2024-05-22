@@ -3,12 +3,32 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "./submit-button";
+import { Button } from "@/components/ui/button";
 
 export default function Login({
   searchParams,
 }: {
   searchParams: { message: string };
 }) {
+  const handleSignInWithGoogle = async () => {
+    "use server";
+
+    const origin = headers().get("origin");
+    const supabase = createClient();
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+    return redirect(data.url);
+  };
+
   const signIn = async (formData: FormData) => {
     "use server";
 
@@ -20,6 +40,16 @@ export default function Login({
       email,
       password,
     });
+
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+    console.log(user.user_metadata);
+    let api =
+      "/api/user/create?" +
+      `user_id=${user.id}&user_name=${user.user_metadata.full_name}&gmail=${user.email}&avatar_url=${user.user_metadata.avatar_url}`;
+    const data = await fetch(api, { method: "POST" });
 
     if (error) {
       return redirect("/login?message=Could not authenticate user");
@@ -108,11 +138,21 @@ export default function Login({
         >
           Sign Up
         </SubmitButton>
+
         {searchParams?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
             {searchParams.message}
           </p>
         )}
+      </form>
+      <form className="flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+        <SubmitButton
+          formAction={handleSignInWithGoogle}
+          className="bg-blue-700 rounded-md px-4 py-2 text-foreground mb-2"
+          pendingText="Signing In..."
+        >
+          Google sign in
+        </SubmitButton>
       </form>
     </div>
   );

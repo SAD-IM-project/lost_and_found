@@ -15,7 +15,7 @@ type Category = {
   sub_of?: string;
 };
 
-type Object = {
+type LostObject = {
   object_id: string;
   object_name: string;
   type: 'lost' | 'found';
