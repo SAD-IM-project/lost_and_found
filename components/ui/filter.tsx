@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/popover"
 import Select from 'react-select';
 
+
 const category = [
     {
         label: '證件',
@@ -48,7 +49,7 @@ const location = [
     },
 ];
 
-export function DatePickerWithRange({
+export function Filter({
     className,
 }: React.HTMLAttributes<HTMLDivElement>) {
     const [date, setDate] = React.useState<DateRange | undefined>(undefined)
@@ -64,6 +65,21 @@ export function DatePickerWithRange({
     }
     const handleApply = () => {
         setIsPopoverOpen(false)
+        // 定義城市和區域
+        const city = 'aa';
+        const district = 'bb';
+        console.log(selectedLocations)
+
+        // 創建查詢參數
+        const params = new URLSearchParams();
+        params.append('city', city);
+        params.append('district', district);
+
+        // 發送 GET 請求
+        fetch('/api/db/add_city_district/route?' + params.toString())
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
     }
 
     const handleReset = () => {
@@ -133,6 +149,7 @@ export function DatePickerWithRange({
                 placeholder="Select category..."
                 value={selectedCategories}
                 onChange={handleSetCategories}
+                id="category"
             />
             <span>Location:</span>
             <Select
@@ -142,6 +159,7 @@ export function DatePickerWithRange({
                 placeholder="Select location..."
                 value={selectedLocations}
                 onChange={handleSetLocations}
+                id="location"
             />
             <div className="flex justify-end gap-2 p-5">
                 <Button onClick={handleReset} variant="outline">Reset</Button>
