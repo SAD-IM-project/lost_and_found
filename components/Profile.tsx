@@ -1,5 +1,6 @@
 import React from "react";
 import MyPostButton from "./MyPostButton";
+import MyChatButton from "./MyChatButton";
 interface ProfileProps {
     title: string;
     phone: string;
@@ -24,6 +25,7 @@ const Profile: React.FC<ProfileProps> = ({ title, phone, mail }) => {
         </div>
       </div>
       <MyPostButton />
+      <MyChatButton />
     </div>
   );
 };

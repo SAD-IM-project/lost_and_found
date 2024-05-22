@@ -3,16 +3,14 @@ import React from 'react'
 import { Button } from './ui/button'
 import { useRouter } from 'next/navigation'
 
-export default function MyPostButton() {
+export default function MyChatButton() {
     const router = useRouter()
     const handleClick = () =>{
-        console.log('My post')
-        // redirect to /mypost using router
-        router.push('/mypost')
+        router.push('/MyChat')
     }
   return (
     <div className='m-5'>
-        <Button onClick={handleClick}>My post</Button>
+        <Button onClick={handleClick}>My Chat</Button>
     </div>
     
   )
