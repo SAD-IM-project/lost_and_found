@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { format, set } from "date-fns"
+import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
@@ -12,50 +12,99 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import Select from 'react-select';
+import Select, { MultiValue, ActionMeta, GroupBase } from 'react-select';
 
+// 定義選項類型
+interface Option {
+    value: string;
+    label: string;
+}
 
-const category = [
-    {
-        label: '證件',
-        options: [
-            { value: '學生證', label: '學生證' },
-            { value: '身分證', label: '身分證' },
-        ],
-    },
-    {
-        label: '電子產品',
-        options: [
-            { value: 'iPhone', label: 'iPhone' },
-            { value: 'airpods pro', label: 'airpods pro' },
-        ],
-    },
-];
+// 定義大分類及其對應的子分類
+const categories: Record<string, Option[]> = {
+    '證件': [
+        { value: '學生證', label: '學生證' },
+        { value: '身分證', label: '身分證' },
+    ],
+    '電子產品': [
+        { value: 'iPhone', label: 'iPhone' },
+        { value: 'airpods pro', label: 'airpods pro' },
+    ],
+};
 
-const location = [
-    {
-        label: '台北市',
-        options: [
-            { value: '中正區', label: '中正區' },
-            { value: '大安區', label: '大安區' },
-        ],
-    },
-    {
-        label: '新北市',
-        options: [
-            { value: '泰山區', label: '泰山區' },
-            { value: '新莊區', label: '新莊區' },
-        ],
-    },
-];
+// 定義城市及其對應的區
+const locations: Record<string, Option[]> = {
+    '台北市': [
+        { value: '中正區', label: '中正區' },
+        { value: '大安區', label: '大安區' },
+    ],
+    '新北市': [
+        { value: '泰山區', label: '泰山區' },
+        { value: '新莊區', label: '新莊區' },
+    ],
+};
 
 export function Filter({
     className,
 }: React.HTMLAttributes<HTMLDivElement>) {
     const [date, setDate] = React.useState<DateRange | undefined>(undefined)
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
-    const [selectedCategories, setSelectedCategories] = React.useState(null);
-    const [selectedLocations, setSelectedLocations] = React.useState(null);
+    const [selectedMainCategories, setSelectedMainCategories] = React.useState<MultiValue<Option>>([]);
+    const [selectedSubCategories, setSelectedSubCategories] = React.useState<MultiValue<Option>>([]);
+    const [subCategoryOptions, setSubCategoryOptions] = React.useState<Option[]>([]);
+    const [selectedCities, setSelectedCities] = React.useState<MultiValue<Option>>([]);
+    const [selectedDistricts, setSelectedDistricts] = React.useState<MultiValue<Option>>([]);
+    const [districtOptions, setDistrictOptions] = React.useState<Option[]>([]);
+
+    // 當大分類改變時，更新子分類選項
+    const handleMainCategoryChange = (newSelectedMainCategories: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+        // 找出被移除的大分類
+        const removedMainCategories = selectedMainCategories.filter(
+            category => !newSelectedMainCategories.some(newCat => newCat.value === category.value)
+        );
+
+        // 更新大分類
+        setSelectedMainCategories(newSelectedMainCategories);
+
+        // 找出需要保留的子分類
+        const remainingSubCategories = selectedSubCategories.filter(
+            subCategory => !removedMainCategories.some(
+                mainCategory => categories[mainCategory.value].some(
+                    cat => cat.value === subCategory.value
+                )
+            )
+        );
+
+        setSelectedSubCategories(remainingSubCategories);
+
+        const subCategories = newSelectedMainCategories.flatMap(cat => categories[cat.value] || []);
+        setSubCategoryOptions(subCategories);
+    }
+
+    // 當城市改變時，更新區選項
+    const handleCityChange = (newSelectedCities: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+        // 找出被移除的城市
+        const removedCities = selectedCities.filter(
+            city => !newSelectedCities.some(newCity => newCity.value === city.value)
+        );
+
+        // 更新城市
+        setSelectedCities(newSelectedCities);
+
+        // 找出需要保留的區
+        const remainingDistricts = selectedDistricts.filter(
+            district => !removedCities.some(
+                city => locations[city.value].some(
+                    loc => loc.value === district.value
+                )
+            )
+        );
+
+        setSelectedDistricts(remainingDistricts);
+
+        const districts = newSelectedCities.flatMap(city => locations[city.value] || []);
+        setDistrictOptions(districts);
+    }
 
     const handleResetDate = () => {
         setDate(undefined)
@@ -65,38 +114,19 @@ export function Filter({
     }
     const handleApply = () => {
         setIsPopoverOpen(false)
-        // 定義城市和區域
-        const city = 'aa';
-        const district = 'bb';
-        console.log(selectedLocations)
 
-        // 創建查詢參數
-        const params = new URLSearchParams();
-        params.append('city', city);
-        params.append('district', district);
-
-        // 發送 GET 請求
-        fetch('/api/db/add_city_district/route?' + params.toString())
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
     }
 
     const handleReset = () => {
         setDate(undefined)
         setIsPopoverOpen(false)
-        setSelectedCategories(null)
-        setSelectedLocations(null)
+        setSelectedMainCategories([])
+        setSelectedSubCategories([])
+        setSubCategoryOptions([])
+        setSelectedCities([])
+        setSelectedDistricts([])
+        setDistrictOptions([])
     }
-
-    const handleSetCategories = (selectedCategories) => {
-        setSelectedCategories(selectedCategories)
-    }
-
-    const handleSetLocations = (selectedLocations) => {
-        setSelectedLocations(selectedLocations)
-    }
-
 
     return (
         <div className={cn("grid gap-2", className)}>
@@ -141,25 +171,47 @@ export function Filter({
                     </div>
                 </PopoverContent>
             </Popover>
-            <span>Category:</span>
+            <span>Main Category:</span>
             <Select
-                options={category}
+                options={Object.keys(categories).map(cat => ({ value: cat, label: cat }))}
                 isMulti
                 className="w-[300px]"
-                placeholder="Select category..."
-                value={selectedCategories}
-                onChange={handleSetCategories}
-                id="category"
+                placeholder="Select main category..."
+                value={selectedMainCategories}
+                onChange={handleMainCategoryChange}
+                id="mainCategory"
             />
-            <span>Location:</span>
+            <span>Sub Category:</span>
             <Select
-                options={location}
+                options={subCategoryOptions}
                 isMulti
                 className="w-[300px]"
-                placeholder="Select location..."
-                value={selectedLocations}
-                onChange={handleSetLocations}
-                id="location"
+                placeholder="Select sub category..."
+                value={selectedSubCategories}
+                onChange={setSelectedSubCategories}
+                id="subCategory"
+                isDisabled={selectedMainCategories.length === 0}
+            />
+            <span>City:</span>
+            <Select
+                options={Object.keys(locations).map(city => ({ value: city, label: city }))}
+                isMulti
+                className="w-[300px]"
+                placeholder="Select city..."
+                value={selectedCities}
+                onChange={handleCityChange}
+                id="city"
+            />
+            <span>District:</span>
+            <Select
+                options={districtOptions}
+                isMulti
+                className="w-[300px]"
+                placeholder="Select district..."
+                value={selectedDistricts}
+                onChange={setSelectedDistricts}
+                id="district"
+                isDisabled={selectedCities.length === 0}
             />
             <div className="flex justify-end gap-2 p-5">
                 <Button onClick={handleReset} variant="outline">Reset</Button>
