@@ -25,7 +25,8 @@ export async function createObject(
     const { data, error } = await supabase
         .from("object")
         .upsert([object])
-        .select("*");
+        .select("*")
+        .single();
     if (error) {
         throw error;
     }
