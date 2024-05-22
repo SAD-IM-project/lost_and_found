@@ -8,3 +8,28 @@ type District = {
   district_name: string;
   in_city: string;
 };
+
+type Category = {
+  category_id: string;
+  category_name: string;
+  sub_of?: string;
+};
+
+type Object = {
+  object_id: string;
+  object_name: string;
+  type: 'lost' | 'found';
+  description: string;
+  closed: boolean;
+  post_by: string;
+  category_id: string;
+  in_district: string;
+  post_date: Date;
+}
+
+type User = {
+  user_id: string;
+  user_name: string;
+  gmail: string;
+  avatar_url?: string;
+}
