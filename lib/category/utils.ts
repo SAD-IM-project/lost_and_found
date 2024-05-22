@@ -105,7 +105,8 @@ export async function deleteCategory(
 export async function getAllCategories(supabase: SupabaseClient) {
   const { data, error } = await supabase
     .from("category")
-    .select("*");
+    .select("*, sub_of: category(*)")
+    // .contains('sub_of', []);
   if (error) {
     throw error;
   }
