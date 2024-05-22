@@ -1,4 +1,4 @@
-import { getCategory } from "@/lib/category/utils";
+import { getAllCategories, getCategory } from "@/lib/category/utils";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -23,6 +23,10 @@ export async function GET(request: Request) {
   }
 
   try{
+    if (category_name === 'all'){
+      const data = await getAllCategories(supabase);
+      return NextResponse.json(data, {status:200 });
+    }
     const data = await getCategory(supabase, category_name);
     return NextResponse.json(data, {status:200 });
   }

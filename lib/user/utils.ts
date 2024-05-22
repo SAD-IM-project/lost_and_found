@@ -31,3 +31,19 @@ export async function createUser(supabase: SupabaseClient, user: Partial<User>) 
     }
     return data;
 }
+
+export async function updateUser(supabase: SupabaseClient, user: Partial<User>) {
+    if (!user.user_id) {
+        throw new Error("User ID is required");
+    }
+
+    const { data, error } = await supabase
+        .from("users")
+        .update(user)
+        .eq("user_id", user.user_id)
+        .select("*");
+    if (error) {
+        throw error;
+    }
+    return data;
+}

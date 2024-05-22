@@ -9,6 +9,12 @@ type District = {
   in_city: string;
 };
 
+type DistrictWithCity = {
+  district_id: string;
+  district_name: string;
+  city_name: string;
+};
+
 type Category = {
   category_id: string;
   category_name: string;
@@ -24,7 +30,9 @@ type LostObject = {
   post_by: string;
   category_id: string;
   in_district: string;
-  post_date: Date;
+  post_time: Date;
+  happen_time: Date;
+  address: string;
 }
 
 type User = {
