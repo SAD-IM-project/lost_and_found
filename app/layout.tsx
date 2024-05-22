@@ -3,10 +3,11 @@ import "./globals.css";
 import Link from "next/link";
 import { Package2, Search, CircleUser, CirclePlus, Bell, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { SearchForm } from "@/components/ui/searchForm";
 import { Button } from "@/components/ui/button";
 import { Filter } from "@/components/ui/filter";
-import Image from "next/image"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
+import Image from "next/image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -63,15 +64,8 @@ export default function RootLayout({
                 </Link>
               </nav>
             </div>
-            <form className="flex items-center flex-1 sm:flex-initial justify-between">
-              <div className="relative flex-grow mr-4">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="pl-8 sm:w-[50px] md:w-[200px] lg:w-[300px]"
-                />
-              </div>
+            <div className="flex items-center flex-1 sm:flex-initial justify-between">
+              <SearchForm />
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
                 <Link
                   href="user"
@@ -81,28 +75,28 @@ export default function RootLayout({
                   <CircleUser className="h-7 w-7" />
                 </Link>
               </nav>
-            </form>
+            </div>
           </header>
           <div className="w-full flex flex-row relative">
-            <div className="w-96 overflow-auto space-y-2 py-4 px-4">
+            <div className="w-96 sticky top-16 overflow-auto space-y-2 py-4 px-4 h-[calc(100vh-4rem)]">
               <Filter />
             </div>
-            <div className="flex-grow overflow-auto z-0">
+            <div className="flex-grow overflow-auto">
               {children}
             </div>
-            <div className="overflow-auto flex flex-col items-center py-4 gap-3 w-20">
+            <div className="w-20 sticky top-16 overflow-auto flex flex-col items-center py-4 gap-3 h-[calc(100vh-4rem)]">
               <Link href="/create">
                 <Button variant="ghost" size="icon">
                   <CirclePlus className="h-7 w-7" />
                 </Button>
               </Link>
               <Link href="/notification">
-                <Button variant='ghost' size='icon'>
+                <Button variant="ghost" size="icon">
                   <Bell className="h-7 w-7" />
                 </Button>
               </Link>
               <Link href="/message">
-                <Button variant='ghost' size='icon'>
+                <Button variant="ghost" size="icon">
                   <Mail className="h-7 w-7" />
                 </Button>
               </Link>
