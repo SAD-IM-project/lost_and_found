@@ -13,6 +13,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import Select, { MultiValue, ActionMeta, GroupBase } from 'react-select';
+import { useRouter } from "next/navigation"
+import queryString from "query-string"
 
 // 定義選項類型
 interface Option {
@@ -20,31 +22,7 @@ interface Option {
     label: string;
 }
 
-
-// // 定義大分類及其對應的子分類
-// const categories: Record<string, Option[]> = {
-//     '證件': [
-//         { value: '學生證', label: '學生證' },
-//         { value: '身分證', label: '身分證' },
-//     ],
-//     '電子產品': [
-//         { value: 'iPhone', label: 'iPhone' },
-//         { value: 'airpods pro', label: 'airpods pro' },
-//     ],
-// };
-
-// 定義城市及其對應的區
-// const locations: Record<string, Option[]> = {
-//     '台北市': [
-//         { value: '中正區', label: '中正區' },
-//         { value: '大安區', label: '大安區' },
-//     ],
-//     '新北市': [
-//         { value: '泰山區', label: '泰山區' },
-//         { value: '新莊區', label: '新莊區' },
-//     ],
-// };
-
+// 定義過濾器組件
 export function Filter({
     className,
 }: React.HTMLAttributes<HTMLDivElement>) {
@@ -52,28 +30,43 @@ export function Filter({
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
     const [selectedMainCategories, setSelectedMainCategories] = React.useState<MultiValue<Option>>([]);
     const [selectedSubCategories, setSelectedSubCategories] = React.useState<MultiValue<Option>>([]);
-    const [subCategoryOptions, setSubCategoryOptions] = React.useState<Option[]>([]);
+    const [subCategoryOptions, setSubCategoryOptions] = React.useState<GroupBase<Option>[]>([]);
     const [selectedCities, setSelectedCities] = React.useState<MultiValue<Option>>([]);
     const [selectedDistricts, setSelectedDistricts] = React.useState<MultiValue<Option>>([]);
-    const [districtOptions, setDistrictOptions] = React.useState<Option[]>([]);
+    const [districtOptions, setDistrictOptions] = React.useState<GroupBase<Option>[]>([]);
     const [categories, setCategories] = React.useState<Record<string, Option[]>>({})
-    const [locations, setLocations] = React.useState([]);
+    const [locations, setLocations] = React.useState<Record<string, Option[]>>({});
 
-
+    React.useEffect(() => {
+        fetch('/api/category/get?category_name=all')
+            .then(response => response.json())
+            .then(data => {
+                const formattedData = data.reduce((acc: any, item: any) => {
+                    if (item.sub_of.length > 0) {
+                        acc[item.category_name] = item.sub_of.map((d: any) => ({
+                            value: d.category_name,
+                            label: d.category_name
+                        }));
+                    }
+                    return acc;
+                }, {});
+                setCategories(formattedData);
+            })
+            .catch(error => console.error('Error:', error));
+    }, []);
 
     React.useEffect(() => {
         fetch('/api/city_district/get_all')
             .then(response => response.json())
             .then(data => {
-                const formattedData = data.data.city_district.reduce((acc: any, item: any) => {
+                const formattedData = data.city_district.reduce((acc: any, item: any) => {
                     acc[item.city_name] = item.district.map((d: any) => ({
-                        value: d.district_name,
+                        value: d.district_id,
                         label: d.district_name
                     }));
                     return acc;
                 }, {});
                 setLocations(formattedData);
-                console.log(formattedData);
             })
             .catch(error => console.error('Error:', error));
     }, []);
@@ -99,9 +92,14 @@ export function Filter({
 
         setSelectedSubCategories(remainingSubCategories);
 
-        const subCategories = newSelectedMainCategories.flatMap(cat => categories[cat.value] || []);
+        // 更新子分類選項
+        const subCategories = newSelectedMainCategories.map(cat => ({
+            label: cat.label,
+            options: categories[cat.value] || []
+        }));
         setSubCategoryOptions(subCategories);
     }
+
     // 當城市改變時，更新區選項
     const handleCityChange = (newSelectedCities: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
         // 找出被移除的城市
@@ -123,18 +121,36 @@ export function Filter({
 
         setSelectedDistricts(remainingDistricts);
 
-        const districts = newSelectedCities.flatMap(city => locations[city.value] || []);
+        // 更新區選項
+        const districts = newSelectedCities.map(city => ({
+            label: city.label,
+            options: locations[city.value] || []
+        }));
         setDistrictOptions(districts);
     }
+
     const handleResetDate = () => {
         setDate(undefined)
     }
+
     const handleApplyDate = () => {
         setIsPopoverOpen(false)
     }
+
+    const router = useRouter()
     const handleApply = () => {
         setIsPopoverOpen(false)
+        setIsPopoverOpen(false)
+        const query = {
+            date: date ? `${format(date.from!, 'yyyy-MM-dd')}-${format(date.to!, 'yyyy-MM-dd')}` : undefined,
+            subCategories: selectedSubCategories.map(sub => sub.value).join(','),
+            districts: selectedDistricts.map(district => district.value).join(',')
+        }
+        const queryStringified = queryString.stringify(query, { skipNull: true, skipEmptyString: true })
+        console.log(queryStringified)
+        router.push(`?${queryStringified}`)
     }
+
     const handleReset = () => {
         setDate(undefined)
         setIsPopoverOpen(false)

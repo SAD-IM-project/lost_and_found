@@ -3,9 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  console.log('fuck')
   const supabase = createClient();
   //   const cities = await getAllCity(supabase);
   const city_district = await getAllCityDistrictJoin(supabase);
-  return NextResponse.json({ data: { city_district } });
+  return NextResponse.json({ city_district });
 }
