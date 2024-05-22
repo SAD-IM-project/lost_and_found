@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Package2, Search, CircleUser, CirclePlus, Bell, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DatePickerWithRange } from "@/components/ui/date-picker-with-range";
+import { Filter } from "@/components/ui/filter";
 import Image from "next/image"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 
@@ -85,7 +85,7 @@ export default function RootLayout({
           </header>
           <div className="w-full flex flex-row relative">
             <div className="w-96 overflow-auto space-y-2 py-4 px-4">
-              <DatePickerWithRange className="" />
+              <Filter />
             </div>
             <div className="flex-grow overflow-auto z-0">
               {children}
