@@ -9,63 +9,99 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  * @throws If there is an error during the insert operation.
  */
 export async function createObject(
-    supabase: SupabaseClient,
-    object: Partial<LostObject>
-){
-    if (!object.object_name) {
-        throw new Error("Object name is required");
-    }
-    if (!object.type) {
-        throw new Error("Object type is required");
-    }
-    if (object.object_name == ''){
-        throw new Error("Object name cannot be empty");
-    }
+  supabase: SupabaseClient,
+  object: Partial<LostObject>
+) {
+  if (!object.object_name) {
+    throw new Error("Object name is required");
+  }
+  if (!object.type) {
+    throw new Error("Object type is required");
+  }
+  if (object.object_name == "") {
+    throw new Error("Object name cannot be empty");
+  }
 
-    const { data, error } = await supabase
-        .from("object")
-        .upsert([object])
-        .select("*")
-        .single();
-    if (error) {
-        throw error;
-    }
-    return data;
+  const { data, error } = await supabase
+    .from("object")
+    .upsert([object])
+    .select("*")
+    .single();
+  if (error) {
+    throw error;
+  }
+  return data;
 }
 
 export async function updateObject(
-    supabase: SupabaseClient,
-    object: Partial<LostObject>
-){
-    if (!object.object_id) {
-        throw new Error("Object ID is required");
-    }
+  supabase: SupabaseClient,
+  object: Partial<LostObject>
+) {
+  if (!object.object_id) {
+    throw new Error("Object ID is required");
+  }
 
-    const { data, error } = await supabase
-        .from("object")
-        .update(object)
-        .eq("object_id", object.object_id)
-        .select("*");
-    if (error) {
-        throw error;
-    }
-    return data;
+  const { data, error } = await supabase
+    .from("object")
+    .update(object)
+    .eq("object_id", object.object_id)
+    .select("*");
+  if (error) {
+    throw error;
+  }
+  return data;
 }
 
 export async function deleteObject(
-    supabase: SupabaseClient,
-    object_id: string
-){
-    if (!object_id) {
-        throw new Error("Object ID is required");
-    }
+  supabase: SupabaseClient,
+  object_id: string
+) {
+  if (!object_id) {
+    throw new Error("Object ID is required");
+  }
 
-    const { data, error } = await supabase
-        .from("object")
-        .delete()
-        .eq("object_id", object_id);
+  const { data, error } = await supabase
+    .from("object")
+    .delete()
+    .eq("object_id", object_id);
+  if (error) {
+    throw error;
+  }
+  return data;
+}
+
+export async function getObject(supabase: SupabaseClient, object_id: string) {
+  if (!object_id) {
+    throw new Error("Object ID is required");
+  }
+
+  const { data, error } = await supabase
+    .from("object")
+    .select("*")
+    .eq("object_id", object_id)
+    .single();
+  if (error) {
+    throw error;
+  }
+  return data ? data : null;
+}
+
+export async function getObjects(supabase: SupabaseClient, search?: string) {
+  if (search) {
+    let search_arr = search?.split(" ");
+    console.log(search_arr)
+    const { data, error } = await supabase.rpc("filter_objects", {
+      filter_arr: search_arr,
+    });
     if (error) {
-        throw error;
+      throw error;
     }
     return data;
+  } else {
+    const { data, error } = await supabase.from("object").select("*");
+    if (error) {
+      throw error;
+    }
+    return data;
+  }
 }

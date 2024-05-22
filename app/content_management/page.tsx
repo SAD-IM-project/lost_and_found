@@ -121,6 +121,18 @@ export default function Test() {
     }
   }
 
+  const getObject = async () => {
+    try {
+      const response = await fetch("api/object/get?object_id=all&search=sovhe 900", {
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
   const [form, setForm] = useState({
     city: "",
     district: "",
@@ -199,6 +211,7 @@ export default function Test() {
       <Button onClick={getAllCityDistrict}>getAllCityDistrict</Button>
       <Button onClick={getAllCategory}>getAllCategory</Button>
       <Button onClick={createObject}>createObject</Button>
+      <Button onClick={getObject}>getObject</Button>
     </div>
   );
 }
