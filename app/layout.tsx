@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
         <main className="min-h-screen w-full flex flex-col items-center">
-          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white">
+          <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white z-50">
             <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
               <Link
                 href="/"
@@ -84,23 +84,28 @@ export default function RootLayout({
             </form>
           </header>
           <div className="w-full flex flex-row relative">
-            <div className="w-96 overflow-auto gap-2 py-4 px-4">
-              <span>Date:</span>
-              {<DatePickerWithRange className="mt-4" />}
+            <div className="w-96 overflow-auto space-y-2 py-4 px-4">
+              <DatePickerWithRange className="" />
             </div>
-            <div className="flex-grow overflow-auto ">
+            <div className="flex-grow overflow-auto z-0">
               {children}
             </div>
             <div className="overflow-auto flex flex-col items-center py-4 gap-3 w-20">
-              <Button variant="ghost" size="icon">
-                <CirclePlus className="h-7 w-7" />
-              </Button>
-              <Button variant='ghost' size='icon'>
-                <Bell className="h-7 w-7" />
-              </Button>
-              <Button variant='ghost' size='icon'>
-                <Mail className="h-7 w-7" />
-              </Button>
+              <Link href="/create">
+                <Button variant="ghost" size="icon">
+                  <CirclePlus className="h-7 w-7" />
+                </Button>
+              </Link>
+              <Link href="/notification">
+                <Button variant='ghost' size='icon'>
+                  <Bell className="h-7 w-7" />
+                </Button>
+              </Link>
+              <Link href="/message">
+                <Button variant='ghost' size='icon'>
+                  <Mail className="h-7 w-7" />
+                </Button>
+              </Link>
             </div>
           </div>
         </main>
