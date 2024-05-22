@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 export async function getUser(supabase: SupabaseClient, user_id: string) {
     const { data, error } = await supabase
-        .from("users")
+        .from("user")
         .select("*")
         .eq("user_id", user_id);
     if (error) {
@@ -23,7 +23,7 @@ export async function createUser(supabase: SupabaseClient, user: Partial<User>) 
     }
 
     const { data, error } = await supabase
-        .from("users")
+        .from("user")
         .upsert([user])
         .select("*");
     if (error) {

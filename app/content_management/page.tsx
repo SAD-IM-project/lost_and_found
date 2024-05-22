@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { postcss } from "tailwindcss";
 import { area_data, onclick_api } from "./data";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Test() {
   const handleOnClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -86,6 +87,43 @@ export default function Test() {
   const getAllCategory = async () => {
     try {
       const response = await fetch("api/category/get?category_name=all", {
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
+  const createObject = async () => {
+    const supabase = createClient();
+    const {data: {user}} = await supabase.auth.getUser();
+    if (!user) return console.error("User not found");
+    const object: Partial<LostObject> = {
+      object_name: "sovheorv",
+      type: "lost",
+      description: "hohsvoehvo",
+      post_by: user.id,
+    }
+    let api = "api/object/create?";
+    for (const key in object) {
+      api += `${key}=${object[key as keyof LostObject]}&`;
+    }
+    try {
+      const response = await fetch( api, {
+        method: "POST",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
+  const getObject = async () => {
+    try {
+      const response = await fetch("api/object/get?object_id=all&search=sovhe 900", {
         method: "GET",
       });
       const data = await response.json();
@@ -172,6 +210,8 @@ export default function Test() {
 
       <Button onClick={getAllCityDistrict}>getAllCityDistrict</Button>
       <Button onClick={getAllCategory}>getAllCategory</Button>
+      <Button onClick={createObject}>createObject</Button>
+      <Button onClick={getObject}>getObject</Button>
     </div>
   );
 }
