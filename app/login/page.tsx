@@ -21,6 +21,14 @@ export default function Login({
       password,
     });
 
+    const user = (await supabase.auth.getUser()).data.user;
+    if (!user) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+    console.log(user.user_metadata)
+    let api = '/api/user/create?' + `user_id=${user.id}&user_name=${user.user_metadata.full_name}&gmail=${user.email}&avatar_url=${user.user_metadata.avatar_url}`;
+    const data = await fetch(api, {method: 'POST'});
+
     if (error) {
       return redirect("/login?message=Could not authenticate user");
     }

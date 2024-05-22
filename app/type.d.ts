@@ -9,13 +9,19 @@ type District = {
   in_city: string;
 };
 
+type DistrictWithCity = {
+  district_id: string;
+  district_name: string;
+  city_name: string;
+};
+
 type Category = {
   category_id: string;
   category_name: string;
   sub_of?: string;
 };
 
-type Object = {
+type LostObject = {
   object_id: string;
   object_name: string;
   type: 'lost' | 'found';

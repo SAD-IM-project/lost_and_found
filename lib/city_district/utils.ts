@@ -123,3 +123,27 @@ export async function getAllDistrictsInCity(
   }
   return data;
 }
+
+export async function getAllCity(
+  supabase: SupabaseClient
+): Promise<City[]> {
+  const { data, error } = await supabase
+    .from("city")
+    .select("*");
+  if (error) {
+    throw error;
+  }
+  return data;
+}
+
+export async function getAllCityDistrictJoin(
+  supabase: SupabaseClient
+): Promise<DistrictWithCity[]> {
+  const { data, error } = await supabase
+    .from("city")
+    .select("*, district(district_id, district_name)");
+  if (error) {
+    throw error;
+  }
+  return data;
+}

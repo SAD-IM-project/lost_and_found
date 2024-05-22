@@ -71,6 +71,30 @@ export default function Test() {
     }
   };
 
+  const getAllCityDistrict = async () => {
+    try {
+      const response = await fetch("api/city_district/get_all", {
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
+  const getAllCategory = async () => {
+    try {
+      const response = await fetch("api/category/get?category_name=all", {
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
   const [form, setForm] = useState({
     city: "",
     district: "",
@@ -145,6 +169,9 @@ export default function Test() {
           </Button>
         </CardContent>
       </Card>
+
+      <Button onClick={getAllCityDistrict}>getAllCityDistrict</Button>
+      <Button onClick={getAllCategory}>getAllCategory</Button>
     </div>
   );
 }
