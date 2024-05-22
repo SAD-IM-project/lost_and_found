@@ -20,29 +20,30 @@ interface Option {
     label: string;
 }
 
-// 定義大分類及其對應的子分類
-const categories: Record<string, Option[]> = {
-    '證件': [
-        { value: '學生證', label: '學生證' },
-        { value: '身分證', label: '身分證' },
-    ],
-    '電子產品': [
-        { value: 'iPhone', label: 'iPhone' },
-        { value: 'airpods pro', label: 'airpods pro' },
-    ],
-};
+
+// // 定義大分類及其對應的子分類
+// const categories: Record<string, Option[]> = {
+//     '證件': [
+//         { value: '學生證', label: '學生證' },
+//         { value: '身分證', label: '身分證' },
+//     ],
+//     '電子產品': [
+//         { value: 'iPhone', label: 'iPhone' },
+//         { value: 'airpods pro', label: 'airpods pro' },
+//     ],
+// };
 
 // 定義城市及其對應的區
-const locations: Record<string, Option[]> = {
-    '台北市': [
-        { value: '中正區', label: '中正區' },
-        { value: '大安區', label: '大安區' },
-    ],
-    '新北市': [
-        { value: '泰山區', label: '泰山區' },
-        { value: '新莊區', label: '新莊區' },
-    ],
-};
+// const locations: Record<string, Option[]> = {
+//     '台北市': [
+//         { value: '中正區', label: '中正區' },
+//         { value: '大安區', label: '大安區' },
+//     ],
+//     '新北市': [
+//         { value: '泰山區', label: '泰山區' },
+//         { value: '新莊區', label: '新莊區' },
+//     ],
+// };
 
 export function Filter({
     className,
@@ -55,6 +56,27 @@ export function Filter({
     const [selectedCities, setSelectedCities] = React.useState<MultiValue<Option>>([]);
     const [selectedDistricts, setSelectedDistricts] = React.useState<MultiValue<Option>>([]);
     const [districtOptions, setDistrictOptions] = React.useState<Option[]>([]);
+    const [categories, setCategories] = React.useState<Record<string, Option[]>>({})
+    const [locations, setLocations] = React.useState([]);
+
+
+
+    React.useEffect(() => {
+        fetch('/api/city_district/get_all')
+            .then(response => response.json())
+            .then(data => {
+                const formattedData = data.data.city_district.reduce((acc: any, item: any) => {
+                    acc[item.city_name] = item.district.map((d: any) => ({
+                        value: d.district_name,
+                        label: d.district_name
+                    }));
+                    return acc;
+                }, {});
+                setLocations(formattedData);
+                console.log(formattedData);
+            })
+            .catch(error => console.error('Error:', error));
+    }, []);
 
     // 當大分類改變時，更新子分類選項
     const handleMainCategoryChange = (newSelectedMainCategories: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
@@ -80,7 +102,6 @@ export function Filter({
         const subCategories = newSelectedMainCategories.flatMap(cat => categories[cat.value] || []);
         setSubCategoryOptions(subCategories);
     }
-
     // 當城市改變時，更新區選項
     const handleCityChange = (newSelectedCities: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
         // 找出被移除的城市
@@ -105,7 +126,6 @@ export function Filter({
         const districts = newSelectedCities.flatMap(city => locations[city.value] || []);
         setDistrictOptions(districts);
     }
-
     const handleResetDate = () => {
         setDate(undefined)
     }
@@ -114,9 +134,7 @@ export function Filter({
     }
     const handleApply = () => {
         setIsPopoverOpen(false)
-
     }
-
     const handleReset = () => {
         setDate(undefined)
         setIsPopoverOpen(false)
