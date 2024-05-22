@@ -3,7 +3,7 @@ import "./globals.css";
 import Link from "next/link";
 import { Package2, Search, CircleUser, CirclePlus, Bell, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import SearchForm, { searchForm } from "@/components/ui/searchForm";
+import { SearchForm } from "@/components/ui/searchForm";
 import { Button } from "@/components/ui/button";
 import { Filter } from "@/components/ui/filter";
 import Image from "next/image";

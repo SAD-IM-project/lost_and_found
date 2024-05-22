@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import queryString from "query-string";
 
-const SearchForm = () => {
+export const SearchForm = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
     const searchParams = useSearchParams();
