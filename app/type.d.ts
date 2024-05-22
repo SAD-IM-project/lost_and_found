@@ -9,6 +9,12 @@ type District = {
   in_city: string;
 };
 
+type DistrictWithCity = {
+  district_id: string;
+  district_name: string;
+  city_name: string;
+};
+
 type Category = {
   category_id: string;
   category_name: string;

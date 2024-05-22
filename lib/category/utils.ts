@@ -101,3 +101,13 @@ export async function deleteCategory(
   console.log(data)
   return data;
 }
+
+export async function getAllCategories(supabase: SupabaseClient) {
+  const { data, error } = await supabase
+    .from("category")
+    .select("*");
+  if (error) {
+    throw error;
+  }
+  return data;
+}
