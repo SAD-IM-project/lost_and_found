@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { format } from "date-fns"
+import { format, set } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { DateRange } from "react-day-picker"
 
@@ -12,13 +12,56 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import Select from 'react-select';
+
+const category = [
+    {
+        label: '證件',
+        options: [
+            { value: '學生證', label: '學生證' },
+            { value: '身分證', label: '身分證' },
+        ],
+    },
+    {
+        label: '電子產品',
+        options: [
+            { value: 'iPhone', label: 'iPhone' },
+            { value: 'airpods pro', label: 'airpods pro' },
+        ],
+    },
+];
+
+const location = [
+    {
+        label: '台北市',
+        options: [
+            { value: '中正區', label: '中正區' },
+            { value: '大安區', label: '大安區' },
+        ],
+    },
+    {
+        label: '新北市',
+        options: [
+            { value: '泰山區', label: '泰山區' },
+            { value: '新莊區', label: '新莊區' },
+        ],
+    },
+];
 
 export function DatePickerWithRange({
     className,
 }: React.HTMLAttributes<HTMLDivElement>) {
     const [date, setDate] = React.useState<DateRange | undefined>(undefined)
     const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
+    const [selectedCategories, setSelectedCategories] = React.useState(null);
+    const [selectedLocations, setSelectedLocations] = React.useState(null);
 
+    const handleResetDate = () => {
+        setDate(undefined)
+    }
+    const handleApplyDate = () => {
+        setIsPopoverOpen(false)
+    }
     const handleApply = () => {
         setIsPopoverOpen(false)
     }
@@ -26,10 +69,22 @@ export function DatePickerWithRange({
     const handleReset = () => {
         setDate(undefined)
         setIsPopoverOpen(false)
+        setSelectedCategories(null)
+        setSelectedLocations(null)
     }
+
+    const handleSetCategories = (selectedCategories) => {
+        setSelectedCategories(selectedCategories)
+    }
+
+    const handleSetLocations = (selectedLocations) => {
+        setSelectedLocations(selectedLocations)
+    }
+
 
     return (
         <div className={cn("grid gap-2", className)}>
+            <span>Date:</span>
             <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
                 <PopoverTrigger asChild>
                     <Button
@@ -64,12 +119,34 @@ export function DatePickerWithRange({
                         onSelect={setDate}
                         numberOfMonths={2}
                     />
-                    <div className="p-2 flex justify-end gap-2">
-                        <Button onClick={handleReset} variant="outline">Reset</Button>
-                        <Button onClick={handleApply}>Apply</Button>
+                    <div className="flex justify-end gap-2 p-5">
+                        <Button onClick={handleResetDate} variant="outline">Reset</Button>
+                        <Button onClick={handleApplyDate}>Apply</Button>
                     </div>
                 </PopoverContent>
             </Popover>
+            <span>Category:</span>
+            <Select
+                options={category}
+                isMulti
+                className="w-[300px]"
+                placeholder="Select category..."
+                value={selectedCategories}
+                onChange={handleSetCategories}
+            />
+            <span>Location:</span>
+            <Select
+                options={location}
+                isMulti
+                className="w-[300px]"
+                placeholder="Select location..."
+                value={selectedLocations}
+                onChange={handleSetLocations}
+            />
+            <div className="flex justify-end gap-2 p-5">
+                <Button onClick={handleReset} variant="outline">Reset</Button>
+                <Button onClick={handleApply}>Apply</Button>
+            </div>
         </div>
     )
 }
