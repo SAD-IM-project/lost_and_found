@@ -30,7 +30,9 @@ type LostObject = {
   post_by: string;
   category_id: string;
   in_district: string;
-  post_date: Date;
+  post_time: Date;
+  happen_time: Date;
+  address: string;
 }
 
 type User = {
