@@ -23,7 +23,7 @@ import {
 export default function Content({ params }: { params: { id: string } }) {
 
     const [data, setData] = useState(null);
-    
+
     const getObjectData = async () => {
         console.log("id", params.id)
         try {
@@ -32,14 +32,14 @@ export default function Content({ params }: { params: { id: string } }) {
             });
             const data = await response.json();
             console.log("data", data);
-            return data;
+            setData(data)
         } catch (error) {
             console.error("Network error:", error);
         }
     }
 
     useEffect(() => {
-        const data = getObjectData();
+        getObjectData();
     }, []);
 
 
@@ -59,15 +59,14 @@ export default function Content({ params }: { params: { id: string } }) {
             </div>
             <Card className="w-1/2 h-full dark:bg-white dark:text-black">
                 <CardHeader>
-                    <CardTitle>雨傘</CardTitle>
+                    <CardTitle>{data.object_name}</CardTitle>
                 </CardHeader>
                 <CardContent >
-                    <p><b>物品名稱：</b>${data.object_name}</p>
                     <p><b>物品ID：</b>  {params.id}</p>
-                    <p><b>尋獲時間：</b>2024/4/1 上午10:00</p>
-                    <p><b>尋獲地點：</b>管二一樓</p>
-                    <p><b>尋獲人：</b>卍煞氣的許文鑫卍</p>
-                    <p><b>描述：</b>黑色的傘，約100公分長有幾處破洞</p>
+                    <p><b>尋獲時間：</b>{new Date(data.happen_time).toISOString().split('T')[0]}</p>
+                    <p><b>尋獲地點：</b>{data.address}</p>
+                    <p><b>尋獲人：</b>{data.post_by}</p>
+                    <p><b>描述：</b>{data.description}</p>
                 </CardContent>
                 <CardFooter>
 
