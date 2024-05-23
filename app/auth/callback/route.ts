@@ -15,24 +15,24 @@ export async function GET(request: Request) {
   if (code) {
     const supabase = createClient();
     await supabase.auth.exchangeCodeForSession(code);
-    // const {
-		// 	data: { user },
-		// } = await supabase.auth.getUser();
+    const {
+			data: { user },
+		} = await supabase.auth.getUser();
 
-		// if (!user) {
-		// 	return NextResponse.redirect('/login');
-		// }
+		if (!user) {
+			return NextResponse.redirect('/login');
+		}
 
-		// const existingUser = await getUser(supabase, user.id as string);
-		// if (!existingUser) {
-		// 	const new_user: User = {
-		// 		avatar_url: user.user_metadata.avatar_url as string,
-		// 		gmail: user.email as string,
-		// 		user_id: user.id as string,
-		// 		user_name: user.user_metadata.full_name as string,
-		// 	};
-		// 	await createUser(supabase, new_user);
-		// }
+		const existingUser = await getUser(supabase, user.id as string);
+		if (!existingUser) {
+			const new_user: User = {
+				avatar_url: user.user_metadata.avatar_url as string,
+				gmail: user.email as string,
+				user_id: user.id as string,
+				user_name: user.user_metadata.full_name as string,
+			};
+			await createUser(supabase, new_user);
+		}
   }
 
   // URL to redirect to after sign up process completes

@@ -5,7 +5,10 @@ import MyMessage from '@/components/MyMessage';
 import YourMessage from '@/components/YourMessage';
 import { Input } from '@/components/ui/input';
 
-const ChatPage: React.FC = () => {
+interface channel {
+  channelid: string;
+}
+const ChatPage: React.FC<channel> = ({channelid}) => {
   const initialData = [
     { user: "me", text: "hello" },
     { user: "you", text: "hi" }
@@ -33,6 +36,7 @@ const ChatPage: React.FC = () => {
     <div className='max-w-3xl mx-auto md:py-10 h-screen w-9/12'>
       <div className='h-full border rounded-md flex flex-col'>
         <ChatHeader />
+        <p>{channelid}</p>
         <div className='flex-1 flex flex-col'>
           <div className='flex-1'></div>
           <div>
