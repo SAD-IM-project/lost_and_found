@@ -1,4 +1,4 @@
-import { getCategory } from "@/lib/category/utils";
+import { getAllCategories, getCategory } from "@/lib/category/utils";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
@@ -18,15 +18,19 @@ export async function GET(request: Request) {
 
   const category_name = searchParams.get("category_name");
 
-  if (!category_name){
-    return NextResponse.json({message: 'category_name is required'}, {status:400 });
+  if (!category_name) {
+    return NextResponse.json({ message: 'category_name is required' }, { status: 400 });
   }
 
-  try{
+  try {
+    if (category_name === 'all') {
+      const data = await getAllCategories(supabase);
+      return NextResponse.json(data, { status: 200 });
+    }
     const data = await getCategory(supabase, category_name);
-    return NextResponse.json(data, {status:200 });
+    return NextResponse.json(data, { status: 200 });
   }
-  catch(error){
-    return NextResponse.json(error, {status:500 });
+  catch (error) {
+    return NextResponse.json(error, { status: 500 });
   }
 }
