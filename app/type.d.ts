@@ -51,3 +51,11 @@ type Message = {
   time: Date;
   object_id: string;
 }
+
+type ObjectComment = {
+  comment_id: string;
+  content: string;
+  post_by: string;
+  post_time: Date;
+  object_id: string;
+}

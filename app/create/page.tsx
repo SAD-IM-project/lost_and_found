@@ -72,7 +72,8 @@ export default function Content({ params }: { params: { id: string } }) {
   const handleSubmit = async () => {
     setUploading(true);
     const supabase = createClient();
-    const user = await supabase.auth.getUser();
+    const {data: {user}} = await supabase.auth.getUser();
+    console.log("user", user);
 
     try {
       if (!file) {
