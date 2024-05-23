@@ -9,6 +9,7 @@ export default function Test_chat() {
     const supabase = createClient();
 
     const me = supabase.auth.getUser();
+    console.log(me)
 
     const subscription = supabase
       .channel(`message`)
