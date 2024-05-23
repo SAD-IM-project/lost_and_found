@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     
     const object_id = searchParams.get("object_id");
     const search = searchParams.get("search");
-    console.log(object_id, search)
+    // console.log(object_id, search)
     
     if (!object_id) {
         return NextResponse.json({ message: "object_id is required" }, { status: 400 });
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json(data, { status: 200 });
         }
         const data = await getObject(supabase, object_id);
-    
+        
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
         return NextResponse.json(error, { status: 500 });
