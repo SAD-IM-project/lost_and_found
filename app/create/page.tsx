@@ -41,7 +41,7 @@ type === "lost" || type === "found" &&
 description === "string" &&
 data.closed === "boolean" &&
 data.post_by === "string" &&
-data.post_time === "object" &&
+data.post_time === "Date" &&
 data.in_district === "string"
 */
 
