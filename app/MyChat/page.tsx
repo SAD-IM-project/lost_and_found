@@ -57,7 +57,7 @@ export default function page() {
     
 
 
-    res.data.filter((element: Message) => element.sender_id === me.data.user.id || element.object_id === me.data.user.id)
+    res.data.filter((element: Message) => element.sender_id === me.data.user.id || element.receiver_id === me.data.user.id)
     const uniqueData: Message[] = [];
     const uniqueCSet = new Set();
     // reverse res.data
