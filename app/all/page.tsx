@@ -4,9 +4,10 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect, useSearchParams } from "next/navigation";
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
+import { start } from "repl";
 
 
 
@@ -50,17 +51,54 @@ const objects: Object[] = [
 
 export default function HomeFilter() {
   const router = useRouter();
+  const params = useSearchParams();
+  const [objects, setObjects] = useState<Object[]>([]);
+  
+  console.log(params.get('search'));
+  console.log(params.get('date'));
+  console.log(params.get('subCategories'));
+  console.log(params.get('districts'));
+
+  // get search query
+  const search = params.get('search') || '';
+  const date = params.get('date') || ''; 
+  // date format : YYYY-MM-DD-YYYY-MM-DD
+  // the former is start date, the latter is end date
+  const dateArray = date.split('-');
+  const subCategories = params.get('subCategories') || '';
+  const districts = params.get('districts') || '';
+
+  // get category and category id
+  // get district and district id
 
   const handlePostClick = (id: number) => {
     router.push(`/content/${id}`);
   };
 
+  const getObject = async () => {
+    try {
+      const response = await fetch(`/api/object/get?object_id=all&search=${search}`, 
+      {
+        method: "GET",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
+  React.useEffect(() => {
+    getObject();
+  }, [search]);
+
+  // filtering
+
   return (
     <div>
-      {/* 中间的 post 列表 */}
       <div className="w-full bg-white overflow-y-scroll p-4">
         {objects.map((post) => (
-          <Card key={post.object_id} onClick={() => handlePostClick(post.object_id)} className="mb-4 p-4 bg-gray-100 rounded">
+          <Card key={post.object_id} onClick={() => handlePostClick(post.object_id)} className="mb-4 p-4 bg-gray-100 rounded cursor-pointer">
             <div className="flex">
               <div className="w-2/3">
                 <h3 className="font-semibold">{post.object_name}</h3>
