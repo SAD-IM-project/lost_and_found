@@ -1,11 +1,13 @@
 // `app/page.tsx` is the UI for the `/` URL
+"use client";
 import Image from "next/image"
 import pic1 from "@/public/app_images/pic1.jpeg"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import {MessageSquare} from "lucide-react"
+import { useEffect, useState } from 'react';
+import { MessageSquare } from "lucide-react"
 import {
     Card,
     CardContent,
@@ -16,7 +18,31 @@ import {
 } from "@/components/ui/card"
 
 
+
+
 export default function Content({ params }: { params: { id: string } }) {
+
+    const [data, setData] = useState(null);
+    
+    const getObjectData = async () => {
+        console.log("id", params.id)
+        try {
+            const response = await fetch(`/api/object/get?object_id=${params.id}`, {
+                method: "GET",
+            });
+            const data = await response.json();
+            console.log("data", data);
+            return data;
+        } catch (error) {
+            console.error("Network error:", error);
+        }
+    }
+
+    useEffect(() => {
+        const data = getObjectData();
+    }, []);
+
+
     return (<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
         <div className="flex w-full h-1/2 ">
             <div className="w-1/2 h-1/3 pl-10 flex flex-col ">
@@ -36,7 +62,7 @@ export default function Content({ params }: { params: { id: string } }) {
                     <CardTitle>雨傘</CardTitle>
                 </CardHeader>
                 <CardContent >
-                    <p><b>物品名稱：</b>雨傘</p>
+                    <p><b>物品名稱：</b>${data.object_name}</p>
                     <p><b>物品ID：</b>  {params.id}</p>
                     <p><b>尋獲時間：</b>2024/4/1 上午10:00</p>
                     <p><b>尋獲地點：</b>管二一樓</p>
@@ -53,8 +79,8 @@ export default function Content({ params }: { params: { id: string } }) {
                 <Label htmlFor="message-2">留個言吧</Label>
                 <Textarea className="dark:bg-white dark:text-black" placeholder="Type your message here." id="message-2" />
                 <Button type="submit" size="sm" className="ml-auto gap-1.5">
-                  Comment
-                  <MessageSquare className="size-3.5" />
+                    Comment
+                    <MessageSquare className="size-3.5" />
                 </Button>
             </div>
             <div className="grid my-5 w-full gap-1.5  px-2 rounded-lg outline-black outline">
