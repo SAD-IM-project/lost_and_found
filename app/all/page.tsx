@@ -52,7 +52,7 @@ export default function HomeFilter() {
   const router = useRouter();
 
   const handlePostClick = (id: number) => {
-    router.push(`/home/content/${id}`);
+    router.push(`/content/${id}`);
   };
 
   return (
