@@ -24,10 +24,7 @@ export async function GET(request: NextRequest) {
             const data = await getObjects(supabase);
             return NextResponse.json(data, { status: 200 });
         }
-        const { data, error } = await getObject(supabase, object_id);
-        if (error) {
-        return NextResponse.json(error, { status: 500 });
-        }
+        const data = await getObject(supabase, object_id);
     
         return NextResponse.json(data, { status: 200 });
     } catch (error) {
