@@ -34,6 +34,17 @@ import { Upload, ArrowUpFromLine } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { useRef } from "react";
 
+/*
+必填的東西
+object_name === "string" &&
+type === "lost" || type === "found" &&
+description === "string" &&
+data.closed === "boolean" &&
+data.post_by === "string" &&
+data.post_time === "object" &&
+data.in_district === "string"
+*/
+
 export default function Content({ params }: { params: { id: string } }) {
   const [date, setDate] = React.useState<Date>();
   const [uploading, setUploading] = React.useState(false);

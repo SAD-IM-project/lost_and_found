@@ -33,6 +33,7 @@ type LostObject = {
   post_time: Date;
   happen_time: Date;
   address: string;
+  img_url?: string;
 }
 
 type User = {
