@@ -41,3 +41,12 @@ type User = {
   gmail: string;
   avatar_url?: string;
 }
+
+type Message = {
+  message_id: string;
+  content: string;
+  sender_id: string;
+  receiver_id: string;
+  time: Date;
+  object_id: string;
+}
