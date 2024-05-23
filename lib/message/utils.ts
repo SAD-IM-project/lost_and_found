@@ -12,7 +12,7 @@ export async function createMessage(supabase: SupabaseClient, message: Message) 
     return data;
 }
 
-export async function getAllMessage(supabase: SupabaseClient, message: Message) {
+export async function getAllMessage(supabase: SupabaseClient) {
     const { data, error } = await supabase
         .from("message")
         .select("*");
