@@ -51,8 +51,8 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
     }
     
 
-
-    res.data.filter((element: Message) => element.object_id === channelid)
+    res.data = res.data.filter((element: Message) => element.object_id === channelid)
+    console.log(res.data)
     setMessages([...res.data])
     setLoading(false)
     console.log("fetching")
@@ -88,7 +88,7 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
   };
 
   return (
-    <div className='max-w-3xl mx-auto md:py-10 w-9/12 h-full'>
+    <div className='max-w-3xl mx-auto md:py-10 w-9/12 h-3/5'>
       <div className='h-full border rounded-md flex flex-col'>
         <ChatHeader />
         <div className='flex-1 flex flex-col'>
