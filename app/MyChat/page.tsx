@@ -57,7 +57,7 @@ export default function page() {
     
 
 
-    res.data.filter((element: Message) => element.sender_id === me.data.user.id || element.receiver_id === me.data.user.id)
+    res.data = res.data.filter((element: Message) => element.sender_id === me.data.user.id || element.receiver_id === me.data.user.id)
     const uniqueData: Message[] = [];
     const uniqueCSet = new Set();
     // reverse res.data
@@ -79,43 +79,6 @@ export default function page() {
   {
     fetchChatRoom()
   }
-  
-
-  // const data = await fetch('/api/message/get, {method: "GET"}')
-  // get all my chat
-  const data = [
-    ,
-    {
-      username: 'user2',
-      lastmessage: 'Hello',
-      channelid: '2'
-
-    },
-    {
-      username: 'user3',
-      lastmessage: 'Hello',
-      channelid: '3'
-
-    },
-    {
-      username: 'user4',
-      lastmessage: 'Hello',
-      channelid: '4'
-
-    },
-    {
-      username: 'user5',
-      lastmessage: 'Hello',
-      channelid: '5'
-
-    },
-    {
-      username: 'user6',
-      lastmessage: 'Hello',
-      channelid: '6'
-
-    }
-  ]
   return (
     <>
     {loading? <div>Loading...</div> : 

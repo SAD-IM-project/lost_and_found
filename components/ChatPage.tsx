@@ -16,7 +16,6 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
     const supabase = createClient();
 
     const me = supabase.auth.getUser();
-    console.log({me})
 
     const subscription = supabase
       .channel(`message`)
@@ -24,8 +23,9 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "message"},
         (payload) => {
-          if (payload.new.sender_id === me || payload.new.receiver_id === me)
+          // if (payload.new.sender_id === me || payload.new.receiver_id === me)
             console.log("Change received!", payload);
+            fetchChatRoom()
         }
       )
       .subscribe();
@@ -35,10 +35,35 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
     }
   });
   const initialData = [
-    { user: "me", text: "hello" },
-    { user: "you", text: "hi" }
+    { receiver_id: "me", content: "hello" },
+    { receiver_id: "you", content: "hi" }
   ];
   const [messages, setMessages] = useState(initialData);
+  const [loading, setLoading] = useState(true);
+
+  
+  const fetchChatRoom = async () => {
+    const data = await fetch('/api/message/get', {method: "GET"})
+    const res = await data.json()
+    if (res.error) {
+      console.log(res.error)
+      return
+    }
+    
+
+    res.data = res.data.filter((element: Message) => element.object_id === channelid)
+    console.log(res.data)
+    setMessages([...res.data])
+    setLoading(false)
+    console.log("fetching")
+  }
+  if (loading) {
+    fetchChatRoom()
+  }
+
+  
+  
+  
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement> ) => {
@@ -52,7 +77,7 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
     const supabase = createClient();
     const me = await supabase.auth.getUser();
     // Add new message
-    const newMessage = { user: "me", text: inputValue };
+    const newMessage = { receiver_id: receiver_id, content: inputValue };
     setMessages([...messages, newMessage]);
 
     const data = await fetch(`/api/message/create?content=${inputValue}&sender_id=${me.data.user?.id}&receiver_id=${receiver_id}&object_id=${channelid}`, {method: "POST"})
@@ -63,18 +88,17 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
   };
 
   return (
-    <div className='max-w-3xl mx-auto md:py-10 h-screen w-9/12'>
+    <div className='max-w-3xl mx-auto md:py-10 w-9/12 h-3/5'>
       <div className='h-full border rounded-md flex flex-col'>
         <ChatHeader />
-        <p>{channelid}</p>
         <div className='flex-1 flex flex-col'>
           <div className='flex-1'></div>
-          <div>
-            {messages.map((msg, index) => (
-              msg.user === "me" ? 
-                <MyMessage key={index} text={msg.text} /> :
-                <YourMessage key={index} text={msg.text} />
-            ))}
+          <div className=' overflow-auto w-full h-5/6'>
+            {loading? <p>Loading...</p> : (messages.map((msg, index) => (
+              msg.receiver_id === receiver_id ? 
+                <MyMessage key={index} text={msg.content} /> :
+                <YourMessage key={index} text={msg.content} />
+            )))}
           </div>
         </div>
         <div className='p-5'>
