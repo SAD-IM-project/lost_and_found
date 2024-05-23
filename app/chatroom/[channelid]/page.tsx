@@ -31,7 +31,10 @@ export default function page({ params }: { params: { channelid: string } }) {
         //     </div>
         //   </div>
         // </div>
-        <ChatPage channelid={params.channelid}/>
+        // <ChatPage channelid={params.channelid}/>
+        <div>
+          nothing
+        </div>
       )
     }
     
