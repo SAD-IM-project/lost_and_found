@@ -11,16 +11,23 @@ import { createObject } from "@/lib/object/uitls";
  * @returns The response object.
  * @throws If there is an error during the upsert operation.
  */
+
+function isObject(data: any): boolean {
+  return (
+    typeof data.object_name === "string" &&
+    (data.type === "lost" || data.type === "found") &&
+    typeof data.description === "string" &&
+    typeof data.closed === "boolean" &&
+    typeof data.post_by === "string" &&
+    typeof data.post_time === "object" &&
+    typeof data.in_district === "string"
+  );
+}
 export async function POST(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  let newObject: Partial<LostObject> = {
-    object_name: "",
-    type: "lost",
-    description: "",
+  let newObject: any = {
     closed: false,
-    post_by: "",
     post_time: new Date(),
-    address: "",
   };
   const category_name = searchParams.forEach((value, key) => {
     console.log(key, value);
@@ -35,6 +42,13 @@ export async function POST(request: NextRequest) {
 
   console.log(newObject);
 
+  if (!isObject(newObject)) {
+    return NextResponse.json(
+      { message: "invalid object data" },
+      { status: 400 }
+    );
+  }
+  
   const supabase = createClient();
   try {
     const data = await createObject(supabase, newObject);
