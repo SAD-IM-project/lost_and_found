@@ -89,7 +89,7 @@ export default function Login({
           <CardTitle>歡迎來到 Lost & Found 肉絲飯</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>歡迎使用 [平台名稱]，讓我們幫助您找回遺失的物品。</p>
+          <p>歡迎使用我們的平台，讓我們來幫助您找回遺失的物品！</p>
         </CardContent>
         <CardContent>
           <form className="flex w-full justify-center">
