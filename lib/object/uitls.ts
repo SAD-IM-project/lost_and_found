@@ -100,8 +100,7 @@ export async function getObjects(supabase: SupabaseClient, search?: string) {
     }
     return data;
   } else {
-    const select_str = "object_id, object_name, type, closed, post_by: post_by(*), img_url, category: category_id(*), district: in_district(*), address, post_time, happen_time, description";
-    const { data, error } = await supabase.from("object").select(select_str);
+    const { data, error } = await supabase.rpc("all_objects");
     if (error) {
       throw error;
     }
