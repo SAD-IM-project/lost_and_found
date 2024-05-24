@@ -17,14 +17,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-    
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 
+import { fetchUser } from '@/utils/user_management';
 import { Input } from "@/components/ui/input";
 import {
     Card,
@@ -38,7 +32,7 @@ import { Upload, ArrowUpFromLine } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { useRef } from "react";
 
-import Select, { MultiValue, ActionMeta, GroupBase } from 'react-select';
+import Select, { SingleValue, ActionMeta, GroupBase } from 'react-select';
 // 定義選項類型
 interface Option {
     value: string;
@@ -63,15 +57,23 @@ img_url === "string"
 export default function Content({ params }: { params: { id: string } }) {
 
     const [date, setDate] = React.useState<Date>();
+    const [user, setUser] = React.useState<string | null>(null);
     const [objectName, setObjectName] = React.useState<string | null>(null);
     const [description, setDescription] = React.useState<string | null>(null);
     const [postBy, setPostBy] = React.useState<string | null>(null);
-    const [inDistrict, setInDistrict] = React.useState<string | null>(null);
+    const [address, setAddress] = React.useState<string | null>(null);
     const [lostFound, setLostFound] = React.useState<string | undefined>("lost");
 
-
-    const [selectedCities, setSelectedCities] = React.useState<MultiValue<Option>>([]);
-    const [selectedDistricts, setSelectedDistricts] = React.useState<MultiValue<Option>>([]);
+    //Category
+    const [selectedMainCategory, setSelectedMainCategory] = React.useState<SingleValue<Option>>();
+    const [selectedSubCategory, setSelectedSubCategory] = React.useState<SingleValue<Option>>();
+    const [subCategoryOptions, setSubCategoryOptions] = React.useState<GroupBase<Option>[]>([]);
+    const [categories, setCategories] = React.useState<Record<string, Option[]>>({})
+    
+    
+    //Location
+    const [selectedCity, setSelectedCity] = React.useState<SingleValue<Option>>();
+    const [selectedDistrict, setSelectedDistrict] = React.useState<SingleValue<Option>>();
     const [districtOptions, setDistrictOptions] = React.useState<GroupBase<Option>[]>([]);
     const [locations, setLocations] = React.useState<Record<string, Option[]>>({});
 
@@ -97,72 +99,92 @@ export default function Content({ params }: { params: { id: string } }) {
         setFile(file);
     };
 
-    const handleCityChange = (newSelectedCities: MultiValue<Option>, actionMeta: ActionMeta<Option>) => {
+    const handleMainCategoryChange = (newSelectedMainCategory: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
+        if(newSelectedMainCategory){
+            const subCategories = {
+                label: newSelectedMainCategory.label,
+                options: categories[newSelectedMainCategory.value] || []
+            };
+            if (newSelectedMainCategory.value != selectedMainCategory?.value) {
+                setSelectedSubCategory(null);
+            }
+            setSelectedMainCategory(newSelectedMainCategory);
+            setSubCategoryOptions([subCategories]);
+        }
+    }
+
+    const handleCityChange = (newSelectedCity: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
         // 找出被移除的城市
-        const removedCities = selectedCities.filter(
-            city => !newSelectedCities.some(newCity => newCity.value === city.value)
-        );
 
         // 更新城市
-        setSelectedCities(newSelectedCities);
+        if (newSelectedCity) {
+            const district = {
+                label: newSelectedCity.label,
+                options: locations[newSelectedCity.value] || []
+            };
+            if (newSelectedCity.value != selectedCity?.value) {
+                setSelectedDistrict(null);
+            }
+            setSelectedCity(newSelectedCity);
+            setDistrictOptions([district]);
 
-        // 找出需要保留的區
-        const remainingDistricts = selectedDistricts.filter(
-            district => !removedCities.some(
-                city => locations[city.value].some(
-                    loc => loc.value === district.value
-                )
-            )
-        );
 
-        setSelectedDistricts(remainingDistricts);
-
-        // 更新區選項
-        const districts = newSelectedCities.map(city => ({
-            label: city.label,
-            options: locations[city.value] || []
-        }));
-        setDistrictOptions(districts);
+        }
     }
 
     const handleSubmit = async () => {
         setUploading(true);
         const supabase = createClient();
+
+
         const { data: { user } } = await supabase.auth.getUser();
-        console.log("user", user);
+        console.log("this is user", user);
 
         try {
-            if (!(file && objectName && description && postBy && inDistrict && date && lostFound)) {
+            if (!(objectName && description && user && selectedDistrict && date && lostFound && selectedSubCategory)) {
+
                 throw new Error("Missing required fields");
             }
-            const fileExt = file.name.split(".").pop();
-            const fileName = `${Math.random()}.${fileExt}`;
-            const filePath = `${fileName}`;
-            console.log("path:", filePath);
+            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory.value}`;
+            if (file) {
+                const fileExt = file.name.split(".").pop();
+                const fileName = `${Math.random()}.${fileExt}`;
+                const filePath = `${fileName}`;
+                console.log("path:", filePath);
 
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from("images") // Replace with your actual bucket name
-                .upload(filePath, file);
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from("images") // Replace with your actual bucket name
+                    .upload(filePath, file);
 
-            if (uploadError) {
-                console.log(uploadError);
-                throw uploadError;
+                if (uploadError) {
+                    console.log(uploadError);
+                    throw uploadError;
+                }
+
+                const {
+                    data: { publicUrl },
+                } = supabase.storage.from("images").getPublicUrl(filePath);
+
+
+                // TODO upload this publicUrl to the database
+                console.log("publicURL:", publicUrl);
+                if (publicUrl) {
+                    url += `&img_url=${publicUrl}`;
+                }
+
             }
-
-            const {
-                data: { publicUrl },
-            } = supabase.storage.from("your-bucket-name").getPublicUrl(filePath);
-
-
-            // TODO upload this publicUrl to the database
-            console.log("publicURL:", publicUrl);
-
-            alert("File uploaded successfully!");
-
+            
 
 
             // Make a POST request to the API
-            const response = await fetch(`api/object/create?object_name=${objectName}&descripttion=${description}&post_by=${postBy}&in_district=${inDistrict}&type=${lostFound}`, {
+            if (address) {
+                url += `&address=${address}`;
+            }
+        
+
+
+            
+            const response = await fetch(url, {
                 method: 'POST'
             });
 
@@ -173,6 +195,7 @@ export default function Content({ params }: { params: { id: string } }) {
             const data = await response.json();
 
             console.log('Data:', data);
+            alert("Uploaded successfully!");
         } catch (error) {
             if (error instanceof Error) {
                 alert("Error uploading file: " + error.message);
@@ -201,7 +224,25 @@ export default function Content({ params }: { params: { id: string } }) {
             })
             .catch(error => console.error('Error:', error));
     }, []);
-    
+
+    React.useEffect(() => {
+        fetch('/api/category/get?category_name=all')
+            .then(response => response.json())
+            .then(data => {
+                const formattedData = data.reduce((acc: any, item: any) => {
+                    if (item.sub_of.length > 0) {
+                        acc[item.category_name] = item.sub_of.map((d: any) => ({
+                            value: d.category_id,
+                            label: d.category_name
+                        }));
+                    }
+                    return acc;
+                }, {});
+                setCategories(formattedData);
+            })
+            .catch(error => console.error('Error:', error));
+    }, []);
+
     return (
         <div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
             <div className="flex w-full h-2/3 ">
@@ -268,38 +309,49 @@ export default function Content({ params }: { params: { id: string } }) {
                         <p className="mt-2">
                             <b>尋獲地點：</b>
                         </p>
-                        <span>城市:</span>
                         <Select
                             options={Object.keys(locations).map(city => ({ value: city, label: city }))}
-                            isMulti
-                            className="w-[300px]"
+                            className="w-[300px] my-2"
                             placeholder="Select city..."
-                            value={selectedCities}
+                            value={selectedCity}
                             onChange={handleCityChange}
                             id="city"
                         />
-                        <span>區:</span>
                         <Select
                             options={districtOptions}
-                            isMulti
-                            className="w-[300px]"
+                            className="w-[300px] my-2"
                             placeholder="Select district..."
-                            value={selectedDistricts}
-                            onChange={setSelectedDistricts}
+                            value={selectedDistrict}
+                            onChange={setSelectedDistrict}
                             id="district"
-                            isDisabled={selectedCities.length === 0}
+                            isDisabled={selectedCity === undefined}
                         />
                         <Input className="my-2" placeholder="e.g. 台大總圖"
-                            value={inDistrict as string} // Change the type of value prop from String to string
-                            onChange={e => setInDistrict(e.target.value)}
+                            value={address as string} // Change the type of value prop from String to string
+                            onChange={e => setAddress(e.target.value)}
+                            disabled={selectedCity === undefined}
                         />
-                        <p>
-                            <b>尋獲人：</b>
+                        <p className="mt-2">
+                            <b>類別：</b>
                         </p>
-                        <Input className="mb-2" placeholder="e.g. 王大明"
-                            value={postBy as string} // Change the type of value prop from String to string
-                            onChange={e => setPostBy(e.target.value)}
+                        <Select
+                            options={Object.keys(categories).map(cat => ({ value: cat, label: cat }))}
+                            className="w-[300px] my-2"
+                            placeholder="Select main category..."
+                            value={selectedMainCategory}
+                            onChange={handleMainCategoryChange}
+                            id="mainCategory"
                         />
+                        <Select
+                            options={subCategoryOptions}
+                            className="w-[300px] my-2"
+                            placeholder="Select sub category..."
+                            value={selectedSubCategory}
+                            onChange={setSelectedSubCategory}
+                            id="subCategory"
+                            isDisabled={selectedMainCategory === undefined}
+                        />
+
                         <Tabs value={lostFound} onValueChange={onTabChange} defaultValue="lost" className="my-2">
                             <TabsList className="w-full my-2">
                                 <TabsTrigger className="w-full my-2" value="lost">Lost</TabsTrigger>
