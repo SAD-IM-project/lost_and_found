@@ -10,8 +10,8 @@ import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:8888";
+  ? `https://${process.env.VERCEL_URL}/all`
+  : "http://localhost:8888/all";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
@@ -34,12 +34,19 @@ export default function RootLayout({
           <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white z-50">
             <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
               <Link
-                href="/"
+                href="/all"
                 className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                 style={{ zIndex: 10 }} // Ensuring it is on top
               >
-                <Package2 className="h-6 w-6" />
-                Lost & Found
+                <div className="relative w-10 h-10 bg-muted">
+                  <Image
+                    src="/app_images/icon.png"
+                    alt="Lost & Found"
+                    layout="fill"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+                <span className="text-base whitespace-nowrap">Lost & Found</span> {/* Add whitespace-nowrap here */}
               </Link>
             </nav>
             <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -68,7 +75,7 @@ export default function RootLayout({
               <SearchForm />
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
                 <Link
-                  href="user"
+                  href="/user"
                   className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                   style={{ zIndex: 10 }} // Ensuring it is on top
                 >
