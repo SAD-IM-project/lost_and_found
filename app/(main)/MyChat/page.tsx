@@ -1,34 +1,9 @@
 "use client"
 import React from 'react'
-import { useEffect } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import ChatPreview from '@/components/ChatPreview'
-import { object } from 'zod'
 import { set } from 'date-fns'
 export default function page() {
-
-  // useEffect(() => {
-  //   const supabase = createClient();
-
-  //   const me = supabase.auth.getUser();
-  //   console.log({me})
-
-  //   const subscription = supabase
-  //     .channel(`message`)
-  //     .on(
-  //       "postgres_changes",
-  //       { event: "INSERT", schema: "public", table: "message"},
-  //       (payload) => {
-  //         if (payload.new.sender_id === me || payload.new.receiver_id === me)
-  //           console.log("Change received!", payload);
-  //       }
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(subscription);
-  //   }
-  // });
 
   const [chatroom, setChatroom] = React.useState([{
       sender_id: 'user1',
