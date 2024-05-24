@@ -23,9 +23,12 @@ const ChatPage: React.FC<channel> = ({channelid, receiver_id}) => {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "message"},
         (payload) => {
-          // if (payload.new.sender_id === me || payload.new.receiver_id === me)
+          if (payload.new.object_id === channelid)
+          {
             console.log("Change received!", payload);
             fetchChatRoom()
+          }
+            
         }
       )
       .subscribe();
