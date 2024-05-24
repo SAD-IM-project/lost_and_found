@@ -75,9 +75,11 @@ export async function getObject(supabase: SupabaseClient, object_id: string) {
     throw new Error("Object ID is required");
   }
 
+  const select_str = "object_id, object_name, type, closed, post_by: post_by(*), img_url, category: category_id(*), district: in_district(*), address, post_time, happen_time, description";
+
   const { data, error } = await supabase
     .from("object")
-    .select("*")
+    .select("select_str")
     .eq("object_id", object_id)
     .single();
   if (error) {
@@ -98,7 +100,8 @@ export async function getObjects(supabase: SupabaseClient, search?: string) {
     }
     return data;
   } else {
-    const { data, error } = await supabase.from("object").select("*");
+    const select_str = "object_id, object_name, type, closed, post_by: post_by(*), img_url, category: category_id(*), district: in_district(*), address, post_time, happen_time, description";
+    const { data, error } = await supabase.from("object").select(select_str);
     if (error) {
       throw error;
     }
