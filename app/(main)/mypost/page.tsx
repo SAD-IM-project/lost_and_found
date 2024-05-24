@@ -33,7 +33,7 @@ interface Object {
   user_name: string;
 }
 
-export default function HomeFilter() {
+export default function MyPostFilter() {
   const router = useRouter();
   const params = useSearchParams();
   const [objects, setObjects] = useState<Object[]>([]);
