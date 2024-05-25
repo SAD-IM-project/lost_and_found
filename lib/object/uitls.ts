@@ -75,11 +75,7 @@ export async function getObject(supabase: SupabaseClient, object_id: string) {
     throw new Error("Object ID is required");
   }
 
-  const { data, error } = await supabase
-    .from("object")
-    .select("*")
-    .eq("object_id", object_id)
-    .single();
+  const { data, error } = await supabase.rpc("object", { id: object_id }).single();
   if (error) {
     throw error;
   }
@@ -89,7 +85,7 @@ export async function getObject(supabase: SupabaseClient, object_id: string) {
 export async function getObjects(supabase: SupabaseClient, search?: string) {
   if (search) {
     let search_arr = search?.split(" ");
-    console.log(search_arr)
+    console.log(search_arr);
     const { data, error } = await supabase.rpc("filter_objects", {
       filter_arr: search_arr,
     });
@@ -98,7 +94,7 @@ export async function getObjects(supabase: SupabaseClient, search?: string) {
     }
     return data;
   } else {
-    const { data, error } = await supabase.from("object").select("*");
+    const { data, error } = await supabase.rpc("all_objects");
     if (error) {
       throw error;
     }

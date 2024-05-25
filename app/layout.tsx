@@ -10,8 +10,8 @@ import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:8888";
+  ? `https://${process.env.VERCEL_URL}/all`
+  : "http://localhost:8888/all";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
@@ -30,16 +30,23 @@ export default function RootLayout({
   return (
     <html lang="en" className={GeistSans.className}>
       <body className="bg-background text-foreground">
-        <main className="min-h-screen w-full flex flex-col items-center">
+        <main className="min-h-screen w-full flex flex-col items-center h-full">
           <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 justify-between w-full bg-white z-50">
             <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
               <Link
-                href="/"
+                href="/all"
                 className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                 style={{ zIndex: 10 }} // Ensuring it is on top
               >
-                <Package2 className="h-6 w-6" />
-                Lost & Found
+                <div className="relative w-10 h-10 bg-muted">
+                  <Image
+                    src="/app_images/icon.png"
+                    alt="Lost & Found"
+                    layout="fill"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+                <span className="text-base whitespace-nowrap">Lost & Found</span> {/* Add whitespace-nowrap here */}
               </Link>
             </nav>
             <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
@@ -77,11 +84,11 @@ export default function RootLayout({
               </nav>
             </div>
           </header>
-          <div className="w-full flex flex-row relative">
+          <div className="w-full flex flex-row relative h-full">
             <div className="w-96 sticky top-16 overflow-auto space-y-2 py-4 px-4 h-[calc(100vh-4rem)]">
               <Filter />
             </div>
-            <div className="flex-grow overflow-auto">
+            <div className="flex-grow overflow-auto h-[calc(100vh-4rem)]">
               {children}
             </div>
             <div className="w-20 sticky top-16 overflow-auto flex flex-col items-center py-4 gap-3 h-[calc(100vh-4rem)]">

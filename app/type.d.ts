@@ -33,6 +33,7 @@ type LostObject = {
   post_time: Date;
   happen_time: Date;
   address: string;
+  img_url?: string;
 }
 
 type User = {
@@ -40,4 +41,21 @@ type User = {
   user_name: string;
   gmail: string;
   avatar_url?: string;
+}
+
+type Message = {
+  message_id: string;
+  content: string;
+  sender_id: string;
+  receiver_id: string;
+  time: Date;
+  object_id: string;
+}
+
+type ObjectComment = {
+  comment_id: string;
+  content: string;
+  post_by: string;
+  post_time: Date;
+  object_id: string;
 }
