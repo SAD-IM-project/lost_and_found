@@ -162,6 +162,7 @@ export function Filter({
         setSelectedCities([])
         setSelectedDistricts([])
         setDistrictOptions([])
+        router.push('?')
     }
 
     return (
