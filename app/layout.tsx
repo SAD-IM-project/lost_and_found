@@ -68,7 +68,7 @@ export default function RootLayout({
               <SearchForm />
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
                 <Link
-                  href="user"
+                  href="profile"
                   className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                   style={{ zIndex: 10 }} // Ensuring it is on top
                 >
@@ -95,7 +95,7 @@ export default function RootLayout({
                   <Bell className="h-7 w-7" />
                 </Button>
               </Link>
-              <Link href="/message">
+              <Link href="/chatroom">
                 <Button variant="ghost" size="icon">
                   <Mail className="h-7 w-7" />
                 </Button>
