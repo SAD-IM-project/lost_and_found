@@ -1,31 +1,36 @@
+"use client";
+
 import React from "react";
 import MyPostButton from "./MyPostButton";
 import MyChatButton from "./MyChatButton";
+import { Button } from "./ui/button";
+import { createClient } from "@/utils/supabase/client";
 interface ProfileProps {
     title: string;
-    phone: string;
     mail: string;
+    image: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ title, phone, mail }) => {
+const Profile: React.FC<ProfileProps> = ({ title, image, mail }) => {
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+  }
   return (
-    <div className="flex flex-col items-center  w-8/12 h-full mt-44">
+    <div className="flex flex-col items-center  w-full h-full mt-20 ml-51">
       <div className="w-2/3 h-2/5 bg-white shadow-md p-8 rounded-xl border-4 border-black flex items-center flex-col">
-        <div className="mb-4 h-1/3 flex items-center">
-          <img src="/app_images/people.png" alt="Profile" className="w-16 h-16 mr-4" />
-          <h1 className="text-3xl font-bold">{title}</h1>
-        </div>
-        <div className="mb-4 h-1/3 flex items-center">
-          <img src="/app_images/telephone.png" alt="Phone" className="w-8 h-8 inline mr-2" />
-          <h1 className="text-2xl font-bold">{phone}</h1>
-        </div>
-        <div className="mb-4 h-1/3 flex items-center">
-          <img src="/app_images/email.png" alt="Email" className="w-8 h-8 inline mr-2" />
-          <h1 className="text-2xl font-bold">{mail}</h1>
-        </div>
+        
+        <img
+          src={image}
+          alt="profile"
+          className="w-24 h-24 rounded-full"
+        />
+        <h1 className="text-2xl font-bold mt-4">{title}</h1>
+        <p className="text-lg mt-2">{mail}</p>
       </div>
       <MyPostButton />
       <MyChatButton />
+      <Button onClick={handleLogout}>logout</Button>
     </div>
   );
 };
