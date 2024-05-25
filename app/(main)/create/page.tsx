@@ -196,6 +196,7 @@ export default function Content({ params }: { params: { id: string } }) {
 
             console.log('Data:', data);
             alert("Uploaded successfully!");
+            
         } catch (error) {
             if (error instanceof Error) {
                 alert("Error uploading file: " + error.message);

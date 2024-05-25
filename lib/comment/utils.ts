@@ -14,9 +14,7 @@ export async function createComment(supabase: SupabaseClient, comment: Partial<O
 
 export async function getAllCommentsInObject(supabase: SupabaseClient, object_id: string) {
     const { data, error } = await supabase
-        .from("comment")
-        .select("*")
-        .eq("object_id", object_id)
+        .rpc("get_comments", {o_id: object_id})
         .order("post_time", { ascending: false });
     if (error) {
         throw error;
