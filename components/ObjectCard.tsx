@@ -46,6 +46,7 @@ export default function ObjectCard({
       key={post.object_id}
       onClick={() => handlePostClick(post.object_id)}
       className={className}
+      data-testid="object-card"
     >
       <div className="flex flex-wrap h-full">
         <div className="w-3/5 h-full ">
