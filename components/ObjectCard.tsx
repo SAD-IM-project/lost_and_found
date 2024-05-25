@@ -95,22 +95,24 @@ export default function ObjectCard({
         </div>
         {/* if post.img_url is not null, show image, else says 'no image'. normalize the size of the image to the height of this card*/}
         <div className="w-2/5 h-full flex justify-center items-center">
-          <AspectRatio ratio={2 / 1}>
+          
             {post.img_url ? (
+                <AspectRatio ratio={2 / 1}>
               <Image
                 src={post.img_url}
                 alt={`${post.object_name}的圖片`}
                 fill={true}
                 className="rounded-md object-contain"
               />
+              </AspectRatio>
             ) : (
-              <div className="flex aspect-square w-full h-full items-center justify-center rounded-md ">
+              <div className="flex aspect-square h-full items-center justify-center rounded-md ">
                 <div className="flex w-full h-full items-center justify-center bg-gray-200 rounded-md">
                   <span className="text-gray-500">no image</span>
                 </div>
               </div> // Replace this with your placeholder component
             )}
-          </AspectRatio>
+          
         </div>
       </div>
     </Card>
