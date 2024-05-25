@@ -124,7 +124,7 @@ export default function Test() {
   const getObject = async () => {
     try {
       const id = "91cdc6a6-4e7a-451c-903a-6dbdd56f9d30"
-      const response = await fetch(`api/object/get?object_id=all`, {
+      const response = await fetch(`api/object/get?object_id=0ad56c04-0b16-4801-ba32-761b19adea88`, {
         method: "GET",
       });
       const data = await response.json();

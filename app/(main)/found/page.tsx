@@ -2,7 +2,7 @@
 'use client';
 
 import { useSearchParams } from "next/navigation";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 
@@ -33,7 +33,7 @@ interface Object {
   user_name: string;
 }
 
-export default function HomeFilter() {
+export default function FoundFilter() {
   const router = useRouter();
   const params = useSearchParams();
   const [objects, setObjects] = useState<Object[]>([]);
@@ -75,6 +75,10 @@ export default function HomeFilter() {
 
   // filtering
   const filteredObjects = objects.filter((object) => {
+    // filter by lost
+    if (object.type !== 'found') {
+      return false;
+    }
     // filter by subCategories
     if (subCategoriesArray.length > 0 && subCategoriesArray[0] !== '' && !subCategoriesArray.includes(object.category_name)) {
       return false;
