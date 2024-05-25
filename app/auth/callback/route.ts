@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 		} = await supabase.auth.getUser();
 
 		if (!user) {
-			return NextResponse.redirect('/login');
+			return NextResponse.redirect('/');
 		}
 
 		const existingUser = await getUser(supabase, user.id as string);
@@ -36,5 +36,5 @@ export async function GET(request: Request) {
   }
 
   // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${origin}/protected`);
+  return NextResponse.redirect(`${origin}/all`);
 }

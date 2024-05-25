@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useState } from 'react';
 import { MessageSquare } from "lucide-react"
-import { Upload, ArrowUpFromLine } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from 'next/navigation'
 import {
     Card,
@@ -18,6 +18,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { get } from "http";
 
 
 type DataType = {
@@ -34,12 +35,23 @@ type DataType = {
     img_url: string;
     description: string;
 };
+type CommentType = {
+    comment_id: string;
+    content: string;
+    post_by: string;
+    post_time: string;
+    user_name: string;
+    object_id: string;
+};
+
 
 
 export default function Content({ params }: { params: { id: string } }) {
     const router = useRouter();
-    
+    const [comment, setComment] = useState<string | undefined>('');
     const [data, setData] = useState<DataType | null>(null);
+    const [comments, setComments] = useState<CommentType[]>([]);
+
     const getObjectData = async () => {
         console.log("id", params.id)
         try {
@@ -55,8 +67,58 @@ export default function Content({ params }: { params: { id: string } }) {
 
     }
 
+    const getComments = async () => {
+        try {
+            const response = await fetch(`/api/comment/get?object_id=${params.id}`,
+                {
+                    method: "GET",
+                });
+            const data = await response.json();
+            console.log(data);
+            setComments(data);
+        } catch (error) {
+            console.error("Network error:", error);
+        }
+    }
+
+
+
+    const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setComment(event.target.value);
+    };
+
+    const handleCommentSubmit = async () => {
+
+        // const content = searchParams.get("content");
+        // const post_by = searchParams.get("post_by");
+        // const post_time = new Date();
+        // const object_id = searchParams.get("object_id");
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log("this is user", user);
+        if (user) {
+            let url = `/api/comment/create?content=${comment}&post_by=${user.id}&object_id=${params.id}`;
+            const response = await fetch(url, {
+                method: 'POST'
+            });
+
+            if (!response.ok) {
+                throw new Error('Error uploading data');
+            }
+
+            const data = await response.json();
+
+            console.log('Data:', data);
+            alert("Commented successfully!");
+            setComment('');
+            getComments();
+        }
+
+    };
+
     useEffect(() => {
         getObjectData();
+        getComments();
     }, []);
 
 
@@ -94,7 +156,7 @@ export default function Content({ params }: { params: { id: string } }) {
                     <p><b>尋獲人：</b>{data.user_name}</p>
                     <p><b>描述：</b>{data.description}</p>
                 </CardContent>
-                <CardFooter  className="flex justify-end">
+                <CardFooter className="flex justify-end">
                     <Button onClick={() => router.push(`/chatroom/${params.id}/${data.user_id}`)}>Go to chat</Button>
                 </CardFooter>
             </Card>
@@ -102,13 +164,28 @@ export default function Content({ params }: { params: { id: string } }) {
         <div className="w-full ml-14 border-black border-solid">
             <div className="grid my-5 w-full gap-1.5">
                 <Label htmlFor="message-2">留個言吧</Label>
-                <Textarea className="dark:bg-white dark:text-black" placeholder="Type your message here." id="message-2" />
-                <Button type="submit" size="sm" className="ml-auto gap-1.5">
+                <Textarea
+                    className="dark:bg-white dark:text-black"
+                    placeholder="Type your message here."
+                    id="message-2"
+                    value={comment}
+                    onChange={handleCommentChange}
+                />
+                <Button type="submit" size="sm" className="ml-auto gap-1.5" onClick={handleCommentSubmit}>
                     Comment
                     <MessageSquare className="size-3.5" />
                 </Button>
             </div>
-            <div className="grid my-5 w-full gap-1.5  px-2 rounded-lg outline-black outline">
+            {comments.map((comment, index) => (
+                <Card className="my-3">
+                    <CardHeader>
+                        <CardTitle>{comment.content}</CardTitle>
+                        <CardDescription>{comment.user_name}</CardDescription>
+                    </CardHeader>
+                </Card>
+            ))}
+
+            {/* <div className="grid my-5 w-full gap-1.5  px-2 rounded-lg outline-black outline">
                 <div className=" text-black ">
                     Author
                 </div>
@@ -140,7 +217,7 @@ export default function Content({ params }: { params: { id: string } }) {
                 <div className=" text-black ">
                     Comment
                 </div>
-            </div>
+            </div>*/}
         </div>
     </div>
     ) : (<div>Loading</div>)
