@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
     address: "",
   };
   const category_name = searchParams.forEach((value, key) => {
-    console.log(key, value);
     if (key in newObject) {
       if (key === "post_time"){}
       else if (key === "happen_time") {

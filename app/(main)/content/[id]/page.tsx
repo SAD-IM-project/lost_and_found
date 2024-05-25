@@ -19,6 +19,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { get } from "http";
+import Loading from "@/components/Loading";
 
 
 type DataType = {
@@ -53,13 +54,11 @@ export default function Content({ params }: { params: { id: string } }) {
     const [comments, setComments] = useState<CommentType[]>([]);
 
     const getObjectData = async () => {
-        console.log("id", params.id)
         try {
             const response = await fetch(`/api/object/get?object_id=${params.id}`, {
                 method: "GET",
             });
             const data = await response.json();
-            console.log("data", data);
             setData(data)
         } catch (error) {
             console.error("Network error:", error);
@@ -74,7 +73,6 @@ export default function Content({ params }: { params: { id: string } }) {
                     method: "GET",
                 });
             const data = await response.json();
-            console.log(data);
             setComments(data);
         } catch (error) {
             console.error("Network error:", error);
@@ -95,7 +93,6 @@ export default function Content({ params }: { params: { id: string } }) {
         // const object_id = searchParams.get("object_id");
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        console.log("this is user", user);
         if (user) {
             let url = `/api/comment/create?content=${comment}&post_by=${user.id}&object_id=${params.id}`;
             const response = await fetch(url, {
@@ -108,7 +105,6 @@ export default function Content({ params }: { params: { id: string } }) {
 
             const data = await response.json();
 
-            console.log('Data:', data);
             alert("Commented successfully!");
             setComment('');
             getComments();
@@ -122,7 +118,7 @@ export default function Content({ params }: { params: { id: string } }) {
     }, []);
 
 
-    return data ? (<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
+    return data ? (<div className="flex flex-row items-start p-5 flex-wrap scroll-smooth focus:scroll-auto border-2 m-2 rounded-md">
         <div className="flex w-full h-1/2 ">
             <div className="w-1/2 h-1/3 pl-10 flex flex-col justify-center items-center">
                 <div className="w-2/3 h-full relative">
@@ -220,5 +216,5 @@ export default function Content({ params }: { params: { id: string } }) {
             </div>*/}
         </div>
     </div>
-    ) : (<div>Loading</div>)
+    ) : (<Loading />)
 }

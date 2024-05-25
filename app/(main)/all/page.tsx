@@ -3,8 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader } from "lucide-react";
 import ObjectCard from "@/components/ObjectCard";
+import Loading from "@/components/Loading";
 
 interface Object {
   address: string;
@@ -66,7 +66,6 @@ export default function HomeFilter() {
         }
       );
       const data = await response.json();
-      // console.log(data);
       setObjects(data);
     } catch (error) {
       console.error("Network error:", error);
@@ -103,7 +102,6 @@ export default function HomeFilter() {
         return false;
       }
     }
-    if (object.img_url) console.log(object);
     return true;
   });
 
@@ -111,22 +109,18 @@ export default function HomeFilter() {
     getObject();
   }, [search, date, subCategories, districts_id]);
 
-  console.log(objects);
-
   return (
     <>
       <div className="bg-white overflow-y-scroll p-4 w-full h-full">
         {loading ? (
-          <div className="flex justify-center items-center w-full h-full">
-            <Loader className="size-10 animate-spin" />
-          </div>
+          <Loading />
         ) : (
           filteredObjects.map((post) => (
             <ObjectCard
               key={post.object_id}
               post={post}
               handlePostClick={handlePostClick}
-              className="mb-4 p-4 bg-gray-100 rounded cursor-pointer"
+              className="mb-4 p-4 bg-gray-100 rounded cursor-pointer h-[200px]"
             />
           ))
         )}

@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
   }
   try {
     const param = { content, post_by, post_time, belongs_to_object };
-    console.log(param);
     const data = await createComment(supabase, param);
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

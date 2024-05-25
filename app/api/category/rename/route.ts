@@ -14,7 +14,6 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   const supabase = createClient();
   const { searchParams } = new URL(request.url);
-  console.log(searchParams);
 
   const original_name = searchParams.get("original_name");
   const new_name = searchParams.get("new_name");

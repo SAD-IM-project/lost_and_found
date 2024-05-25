@@ -41,8 +41,6 @@ export async function POST(request: NextRequest) {
     }
   });
 
-  console.log(newObject);
-
   if (!isObject(newObject)) {
     console.log(newObject);
     console.log("newObject is not valid");

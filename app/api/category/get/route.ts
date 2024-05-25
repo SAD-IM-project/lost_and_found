@@ -14,7 +14,6 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
   const supabase = createClient();
   const { searchParams } = new URL(request.url);
-  console.log(searchParams);
 
   const category_name = searchParams.get("category_name");
 

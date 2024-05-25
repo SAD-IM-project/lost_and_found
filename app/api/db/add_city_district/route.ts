@@ -15,8 +15,6 @@ import { fetchUser } from '@/utils/user_management';
  * @throws If there is an error during the upsert operation.
  */
 export async function POST(request: NextRequest): Promise<NextResponse> {
-	// const cookieStore = cookies();
-	console.log("fuck")
 	const { searchParams } = new URL(request.url);
 	const supabase = createClient();
 	const supabaseUser = await fetchUser(supabase);
@@ -28,7 +26,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 	}
 	try {
 		const data = await createCityDistrict(supabase, city, district);
-		console.log('data', data);
 		return NextResponse.json({ result: '新增成功' }, { status: 200 });
 	} catch (error) {
 		console.log('error', error);

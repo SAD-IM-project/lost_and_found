@@ -149,7 +149,6 @@ export function Filter({
             districts: selectedDistricts.map(district => district.value).join(',')
         }
         const queryStringified = queryString.stringify(query, { skipNull: true, skipEmptyString: true })
-        console.log(queryStringified)
         router.push(`?${queryStringified}`)
     }
 
