@@ -89,7 +89,7 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="max-w-3xl mx-auto md:py-10 w-9/12 h-3/5">
+        <div className="max-w-3xl mx-auto md:py-5 w-9/12 h-full">
           <div className="h-full border rounded-md flex flex-col">
             <ChatHeader />
             <div className="flex-1 flex flex-col">

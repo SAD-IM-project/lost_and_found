@@ -55,7 +55,7 @@ export default function page() {
   return (
     <>
     {loading? <Loading/> : 
-    <div className='w-1/2 top-10 flex flex-col absolute'>
+    <div className='w-full h-full flex flex-wrap justify-center'>
       {chatroom.map((chat) => (
         <ChatPreview channelid={chat.object_id} lastmessage={chat.content} receiver_id={chat.sender_id== myid? chat.receiver_id: chat.sender_id} />
       ))}

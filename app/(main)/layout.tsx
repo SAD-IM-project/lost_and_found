@@ -124,7 +124,7 @@ export default function MainLayout({
                   <Bell className="h-7 w-7" />
                 </Button>
               </Link>
-              <Link href="/message">
+              <Link href="/MyChat">
                 <Button variant="ghost" size="icon">
                   <Mail className="h-7 w-7" />
                 </Button>
