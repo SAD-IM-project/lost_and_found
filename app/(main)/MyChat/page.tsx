@@ -3,6 +3,7 @@ import React from 'react'
 import { createClient } from '@/utils/supabase/client'
 import ChatPreview from '@/components/ChatPreview'
 import { set } from 'date-fns'
+import Loading from '@/components/Loading'
 export default function page() {
 
   const [chatroom, setChatroom] = React.useState([{
@@ -56,7 +57,7 @@ export default function page() {
   }
   return (
     <>
-    {loading? <div>Loading...</div> : 
+    {loading? <Loading/> : 
     <div className='w-1/2 top-10 flex flex-col absolute'>
       {chatroom.map((chat) => (
         <ChatPreview channelid={chat.object_id} lastmessage={chat.content} receiver_id={chat.sender_id== myid? chat.receiver_id: chat.sender_id} />

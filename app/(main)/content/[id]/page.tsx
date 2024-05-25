@@ -19,6 +19,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { get } from "http";
+import Loading from "@/components/Loading";
 
 
 type DataType = {
@@ -122,7 +123,7 @@ export default function Content({ params }: { params: { id: string } }) {
     }, []);
 
 
-    return data ? (<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
+    return data ? (<div className="flex flex-row items-start p-5 flex-wrap scroll-smooth focus:scroll-auto border-2 m-2 rounded-md">
         <div className="flex w-full h-1/2 ">
             <div className="w-1/2 h-1/3 pl-10 flex flex-col justify-center items-center">
                 <div className="w-2/3 h-full relative">
@@ -220,5 +221,5 @@ export default function Content({ params }: { params: { id: string } }) {
             </div>*/}
         </div>
     </div>
-    ) : (<div>Loading</div>)
+    ) : (<Loading />)
 }

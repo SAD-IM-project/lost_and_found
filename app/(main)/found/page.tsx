@@ -4,8 +4,8 @@
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader } from 'lucide-react';
 import ObjectCard from "@/components/ObjectCard";
+import Loading from "@/components/Loading";
 
 interface Object {
   address: string;
@@ -111,9 +111,7 @@ export default function FoundFilter() {
     <>
       <div className="bg-white overflow-y-scroll p-4 w-full h-full">
         {loading ? (
-          <div className="flex justify-center items-center w-full h-full">
-            <Loader className="size-10 animate-spin" />
-          </div>
+          <Loading />
         ) : (
           filteredObjects.map((post) => (
             <ObjectCard
