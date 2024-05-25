@@ -30,19 +30,21 @@ export async function POST(request: NextRequest) {
     post_time: new Date(),
   };
   const category_name = searchParams.forEach((value, key) => {
-    console.log(key, value);
     if (key in newObject) {
       if (key === "post_time" || key === "happen_time") {
         newObject[key as keyof LostObject] = new Date(value as string) as any;
-      } else {
-        newObject[key as keyof LostObject] = value as any;
-      }
+      } 
+    }
+    else {
+      newObject[key as keyof LostObject] = value as any;
     }
   });
 
   console.log(newObject);
 
   if (!isObject(newObject)) {
+    console.log(newObject);
+    console.log("newObject is not valid");
     return NextResponse.json(
       { message: "invalid object data" },
       { status: 400 }
@@ -54,6 +56,7 @@ export async function POST(request: NextRequest) {
     const data = await createObject(supabase, newObject);
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(error, { status: 500 });
   }
 }
