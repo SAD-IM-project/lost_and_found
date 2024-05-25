@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { createObject } from "@/lib/object/uitls";
+import { getCategory } from "@/lib/category/utils";
 
 /**
  * Create a new object in the database.
@@ -53,6 +54,14 @@ export async function POST(request: NextRequest) {
   
   const supabase = createClient();
   try {
+    if (!newObject.category_id){
+      const category = await getCategory(supabase, "其他");
+      newObject.category_id = category?.category_id;
+    }
+    else {
+      const category = await getCategory(supabase, newObject.category_id);
+      newObject.category_id = category?.category_id;
+    }
     const data = await createObject(supabase, newObject);
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
