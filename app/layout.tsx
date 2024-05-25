@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Filter } from "@/components/ui/filter";
 import Image from "next/image";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import FilterNav from "@/components/FilterNav";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}/all`
@@ -50,26 +51,7 @@ export default function RootLayout({
               </Link>
             </nav>
             <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-              <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 pointer-events-auto">
-                <Link
-                  href="/all"
-                  className="text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
-                >
-                  All
-                </Link>
-                <Link
-                  href="/lost"
-                  className="text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
-                >
-                  Lost
-                </Link>
-                <Link
-                  href="/found"
-                  className="text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
-                >
-                  Found
-                </Link>
-              </nav>
+              <FilterNav />
             </div>
             <div className="flex items-center flex-1 sm:flex-initial justify-between">
               <SearchForm />
