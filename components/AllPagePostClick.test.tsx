@@ -26,21 +26,21 @@ interface Object {
   }
 
 const mockPost: Object = {
-  address: "123 Main St",
+  address: "在我家",
   avatar_url: "https://example.com/avatar.jpg",
   category_id: "1",
-  category_name: "Electronics",
-  city_name: "CityName",
+  category_name: "手機",
+  city_name: "基隆縣",
   closed: false,
   description: "This is a description",
-  district_name: "DistrictName",
+  district_name: "信義區",
   in_district: "1",
   gmail: "example@gmail.com",
-  happen_time: "2023-05-26T00:00:00Z",
+  happen_time: "2023-05-26T00:00:00",
   img_url: "https://example.com/image.jpg",
   object_id: "1",
   object_name: "Lost Phone",
-  post_time: "2023-05-26T00:00:00Z",
+  post_time: "2023-05-26T00:00:00",
   type: "lost",
   user_id: "user123",
   user_name: "User Name",
@@ -54,12 +54,12 @@ describe('ObjectCard', () => {
 
     expect(screen.getByText('Lost Phone')).toBeInTheDocument();
     expect(screen.getByText('lost')).toBeInTheDocument();
-    expect(screen.getByText('CityName')).toBeInTheDocument();
-    expect(screen.getByText('DistrictName')).toBeInTheDocument();
-    expect(screen.getByText('Electronics')).toBeInTheDocument();
+    expect(screen.getByText('基隆縣')).toBeInTheDocument();
+    expect(screen.getByText('信義區')).toBeInTheDocument();
+    expect(screen.getByText('手機')).toBeInTheDocument();
     expect(screen.getByText('This is a description')).toBeInTheDocument();
     expect(screen.getByText('Lost at: 5/26/2023')).toBeInTheDocument();
-    expect(screen.getByText('At: 123 Main St')).toBeInTheDocument();
+    expect(screen.getByText('At: 在我家')).toBeInTheDocument();
   });
 
   it('calls handlePostClick when the card is clicked', () => {
