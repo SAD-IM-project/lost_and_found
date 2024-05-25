@@ -18,7 +18,7 @@ interface Object {
   description: string;
   district_name: string;
 
-  district_id: string;
+  in_district: string;
   
   gmail: string;
   happen_time: string;
@@ -78,7 +78,7 @@ export default function HomeFilter() {
       return false;
     }
     // filter by districts
-    if (districts_idArray.length > 0 && districts_idArray[0] !== '' && !districts_idArray.includes(object.district_id)) {
+    if (districts_idArray.length > 0 && districts_idArray[0] !== '' && !districts_idArray.includes(object.in_district)) {
       return false;
     }
     // filter by date
@@ -111,8 +111,18 @@ export default function HomeFilter() {
                 <span className={`inline-block px-2 py-1 text-xs rounded ${post.type === 'lost' ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'}`}>{post.type}</span>
                 <p className="text-sm text-gray-700 mt-2">{post.description}</p>
                 <div className="mt-2">
-                  <span className="inline-block bg-green-200 text-green-800 text-xs px-2 py-1 rounded-full mr-2">{post.district_name}</span>
-                  <span className="inline-block bg-blue-200  text-blue-800  text-xs px-2 py-1 rounded-full mr-2">{post.category_name}</span>
+                  {/* if post.district_name not none, shows, else shows 'no distrcit tag' in red font, same background colour */}
+                  {post.category_name ? (
+                    <span className="inline-block bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded-full mr-2">{post.district_name}</span>
+                  ) : (
+                    <span className="inline-block bg-yellow-100 text-black-800 text-xs px-2 py-1 rounded-full mr-2">no district tag</span>
+                  )}
+                  {/* if post.category_name not none, shows, else shows 'no category tag' in red font, same background colour */}
+                  {post.category_name ? (
+                    <span className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full mr-2">{post.category_name}</span>
+                  ) : (
+                    <span className="inline-block bg-blue-100 text-black-800 text-xs px-2 py-1 rounded-full mr-2">no category tag</span>
+                  )}
                 </div>
               </div>
                 {/* if post.img_url is not null, show image, else says 'no image'. normalize the size of the image to the height of this card*/}
