@@ -147,7 +147,7 @@ export default function Content({ params }: { params: { id: string } }) {
 
                 throw new Error("Missing required fields");
             }
-            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory? selectedSubCategory.label: selectedMainCategory?.label}`;
+            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory? selectedSubCategory.label: selectedMainCategory?.label}&happen_time=${date.toISOString()}`;
             if (file) {
                 const fileExt = file.name.split(".").pop();
                 const fileName = `${Math.random()}.${fileExt}`;

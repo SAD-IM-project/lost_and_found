@@ -129,7 +129,7 @@ export default function LostFilter() {
               key={post.object_id}
               post={post}
               handlePostClick={handlePostClick}
-              className="mb-4 p-4 bg-gray-100 rounded cursor-pointer"
+              className="mb-4 p-4 bg-gray-100 rounded cursor-pointer h-[200px]"
             />
           ))
         )}
