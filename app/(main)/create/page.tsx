@@ -2,7 +2,7 @@
 "use client";
 import * as React from "react";
 import { addDays, format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Loader } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useRef } from "react";
 
 import Select, { SingleValue, ActionMeta, GroupBase } from 'react-select';
+import { useRouter } from "next/navigation";
 // 定義選項類型
 interface Option {
     value: string;
@@ -55,7 +56,8 @@ img_url === "string"
 */
 
 export default function Content({ params }: { params: { id: string } }) {
-
+    const router = useRouter();
+    
     const [date, setDate] = React.useState<Date>();
     const [user, setUser] = React.useState<string | null>(null);
     const [objectName, setObjectName] = React.useState<string | null>(null);
@@ -100,6 +102,7 @@ export default function Content({ params }: { params: { id: string } }) {
     };
 
     const handleMainCategoryChange = (newSelectedMainCategory: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
+        console.log(newSelectedMainCategory?.label, newSelectedMainCategory?.value)
         if(newSelectedMainCategory){
             const subCategories = {
                 label: newSelectedMainCategory.label,
@@ -136,16 +139,15 @@ export default function Content({ params }: { params: { id: string } }) {
         setUploading(true);
         const supabase = createClient();
 
-
         const { data: { user } } = await supabase.auth.getUser();
         console.log("this is user", user);
 
         try {
-            if (!(objectName && description && user && selectedDistrict && date && lostFound && selectedSubCategory)) {
+            if (!(objectName && description && user && selectedDistrict && date && lostFound && (selectedSubCategory || selectedMainCategory))) {
 
                 throw new Error("Missing required fields");
             }
-            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory.value}`;
+            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory? selectedSubCategory.label: selectedMainCategory?.label}`;
             if (file) {
                 const fileExt = file.name.split(".").pop();
                 const fileName = `${Math.random()}.${fileExt}`;
@@ -196,6 +198,7 @@ export default function Content({ params }: { params: { id: string } }) {
 
             console.log('Data:', data);
             alert("Uploaded successfully!");
+            router.push(`/content/${data.object_id}`);
         } catch (error) {
             if (error instanceof Error) {
                 alert("Error uploading file: " + error.message);
@@ -230,7 +233,7 @@ export default function Content({ params }: { params: { id: string } }) {
             .then(response => response.json())
             .then(data => {
                 const formattedData = data.reduce((acc: any, item: any) => {
-                    if (item.sub_of.length > 0) {
+                    if (item.sub_of.length > 0 || item.category_name === "其他") {
                         acc[item.category_name] = item.sub_of.map((d: any) => ({
                             value: d.category_id,
                             label: d.category_name
@@ -238,6 +241,7 @@ export default function Content({ params }: { params: { id: string } }) {
                     }
                     return acc;
                 }, {});
+                console.log(formattedData)
                 setCategories(formattedData);
             })
             .catch(error => console.error('Error:', error));
@@ -374,9 +378,9 @@ export default function Content({ params }: { params: { id: string } }) {
                     </CardContent>
                     <CardFooter>
                         <Button type="submit" size="sm" className="ml-auto gap-1.5"
-                            onClick={handleSubmit}>
-                            Upload
-                            <ArrowUpFromLine className="size-3.5" />
+                            onClick={handleSubmit} disabled={uploading}>
+                            {uploading? "Uploading...": "Submit"}
+                            {uploading? <Loader className="size-3.5 animate-spin"/>:<ArrowUpFromLine className="size-3.5" />}
                         </Button>
                     </CardFooter>
                 </Card>

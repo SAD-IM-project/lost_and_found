@@ -58,6 +58,10 @@ export async function POST(request: NextRequest) {
       const category = await getCategory(supabase, "其他");
       newObject.category_id = category?.category_id;
     }
+    else {
+      const category = await getCategory(supabase, newObject.category_id);
+      newObject.category_id = category?.category_id;
+    }
     const data = await createObject(supabase, newObject);
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
