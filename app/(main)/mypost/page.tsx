@@ -10,6 +10,10 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Image from "next/image"
 import pic1 from "@/public/app_images/pic1.jpeg"
 
+import { createClient } from "@/utils/supabase/client";
+import { set } from "date-fns";
+import { User } from "lucide-react";
+
 interface Object {
   address: string;
   avatar_url: string;
@@ -33,10 +37,11 @@ interface Object {
   user_name: string;
 }
 
-export default function HomeFilter() {
+export default function MyPostFilter() {
   const router = useRouter();
   const params = useSearchParams();
   const [objects, setObjects] = useState<Object[]>([]);
+  const [userID, setUserID] = useState<string>('');
 
   // get search query
   const search = params.get('search') || '';
@@ -73,8 +78,25 @@ export default function HomeFilter() {
     }
   }
 
+  const getUserID = async () => {
+    try {
+      const supabase = createClient();
+      const {data: {user}} = await supabase.auth.getUser();
+      // console.log("user", user);
+      if (user){
+        setUserID(user.id);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
+  }
+
   // filtering
   const filteredObjects = objects.filter((object) => {
+    // filter by UserID
+    if (object.user_id !== userID) {
+      return false;
+    }
     // filter by subCategories
     if (subCategoriesArray.length > 0 && subCategoriesArray[0] !== '' && !subCategoriesArray.includes(object.category_name)) {
       return false;
@@ -100,8 +122,11 @@ export default function HomeFilter() {
     getObject();
   }, [search, date, subCategories, districts_id]);
 
-  console.log(objects);
-
+  React.useEffect(() => {
+    getUserID();
+  });
+  
+  
   return (
     <div>
       <div className="w-full bg-white overflow-y-scroll p-4 ">
