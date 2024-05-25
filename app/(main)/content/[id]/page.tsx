@@ -43,7 +43,7 @@ export default function Content({ params }: { params: { id: string } }) {
     }, []);
 
 
-    return (<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
+    return data? (<div></div>):(<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
         <div className="flex w-full h-1/2 ">
             <div className="w-1/2 h-1/3 pl-10 flex flex-col ">
                 <div className="w-2/3 h-full relative">
@@ -57,7 +57,7 @@ export default function Content({ params }: { params: { id: string } }) {
                     </AspectRatio>
                 </div>
             </div>
-            <Card className="w-1/2 h-full dark:bg-white dark:text-black">
+            {/* <Card className="w-1/2 h-full dark:bg-white dark:text-black">
                 <CardHeader>
                     <CardTitle>{data.object_name}</CardTitle>
                 </CardHeader>
@@ -71,7 +71,7 @@ export default function Content({ params }: { params: { id: string } }) {
                 <CardFooter>
 
                 </CardFooter>
-            </Card>
+            </Card> */}
         </div>
         <div className="w-full ml-14 border-black border-solid">
             <div className="grid my-5 w-full gap-1.5">

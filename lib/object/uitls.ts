@@ -74,7 +74,7 @@ export async function getObject(supabase: SupabaseClient, object_id: string) {
   if (!object_id) {
     throw new Error("Object ID is required");
   }
-
+  console.log("object_id in getObject", object_id);
   const select_str = "object_id, object_name, type, closed, post_by: post_by(*), img_url, category: category_id(*), district: in_district(*), address, post_time, happen_time, description";
 
   const { data, error } = await supabase
