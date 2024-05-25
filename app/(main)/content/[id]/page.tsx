@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useState } from 'react';
 import { MessageSquare } from "lucide-react"
+import { Upload, ArrowUpFromLine } from "lucide-react";
+import { useRouter } from 'next/navigation'
 import {
     Card,
     CardContent,
@@ -18,12 +20,26 @@ import {
 } from "@/components/ui/card"
 
 
+type DataType = {
+    city_name: string;
+    district_name: string;
+    user_name: string;
+    user_id: string;
+    object_name: string;
+    category_name: string;
+    happen_time: string;
+    address: string;
+    post_by: string;
+    post_time: string;
+    img_url: string;
+    description: string;
+};
 
 
 export default function Content({ params }: { params: { id: string } }) {
-
-    const [data, setData] = useState(null);
-
+    const router = useRouter();
+    
+    const [data, setData] = useState<DataType | null>(null);
     const getObjectData = async () => {
         console.log("id", params.id)
         try {
@@ -36,6 +52,7 @@ export default function Content({ params }: { params: { id: string } }) {
         } catch (error) {
             console.error("Network error:", error);
         }
+
     }
 
     useEffect(() => {
@@ -43,35 +60,44 @@ export default function Content({ params }: { params: { id: string } }) {
     }, []);
 
 
-    return data? (<div></div>):(<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
+    return data ? (<div className="flex flex-row items-start p-5 w-full flex-wrap scroll-smooth focus:scroll-auto border-double border-black border-2">
         <div className="flex w-full h-1/2 ">
-            <div className="w-1/2 h-1/3 pl-10 flex flex-col ">
+            <div className="w-1/2 h-1/3 pl-10 flex flex-col justify-center items-center">
                 <div className="w-2/3 h-full relative">
                     <AspectRatio ratio={1 / 1}>
-                        <Image
-                            src={pic1}
-                            alt="Hero Image"
-                            fill={true}
-                            className="rounded-md object-contain"
-                        />
+                        {data.img_url ? (
+                            <Image
+                                src={data.img_url}
+                                alt="Hero Image"
+                                fill={true}
+                                className="rounded-md object-contain"
+                            />
+                        ) : (
+                            <div
+                                className="flex aspect-square w-full h-full items-center justify-center rounded-md border-dashed border-2"
+                            >
+                                <div className="text-right">no image</div>
+                            </div> // Replace this with your placeholder component
+                        )}
                     </AspectRatio>
                 </div>
             </div>
-            {/* <Card className="w-1/2 h-full dark:bg-white dark:text-black">
+            <Card className="w-1/2 h-full dark:bg-white dark:text-black">
                 <CardHeader>
                     <CardTitle>{data.object_name}</CardTitle>
                 </CardHeader>
                 <CardContent >
                     <p><b>物品ID：</b>  {params.id}</p>
                     <p><b>尋獲時間：</b>{new Date(data.happen_time).toISOString().split('T')[0]}</p>
-                    <p><b>尋獲地點：</b>{data.address}</p>
-                    <p><b>尋獲人：</b>{data.post_by}</p>
+                    <p><b>尋獲地點：</b>{data.city_name} {data.district_name}</p>
+                    <p><b>物品種類：</b>{data.category_name}</p>
+                    <p><b>尋獲人：</b>{data.user_name}</p>
                     <p><b>描述：</b>{data.description}</p>
                 </CardContent>
-                <CardFooter>
-
+                <CardFooter  className="flex justify-end">
+                    <Button onClick={() => router.push(`/chatroom/${params.id}/${data.user_id}`)}>Go to chat</Button>
                 </CardFooter>
-            </Card> */}
+            </Card>
         </div>
         <div className="w-full ml-14 border-black border-solid">
             <div className="grid my-5 w-full gap-1.5">
@@ -117,5 +143,5 @@ export default function Content({ params }: { params: { id: string } }) {
             </div>
         </div>
     </div>
-    )
+    ) : (<div>Loading</div>)
 }
