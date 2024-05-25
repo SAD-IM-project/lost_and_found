@@ -62,8 +62,6 @@ export default function MyPostFilter() {
   const subCategoriesArray = subCategories.split(",");
   const districts_idArray = districts_id.split(",");
 
-  console.log(districts_idArray);
-
   const handlePostClick = (id: string) => {
     router.push(`/content/${id}`);
   };
@@ -78,7 +76,6 @@ export default function MyPostFilter() {
         }
       );
       const data = await response.json();
-      // console.log(data);
       setObjects(data);
     } catch (error) {
       console.error("Network error:", error);
@@ -93,7 +90,6 @@ export default function MyPostFilter() {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      // console.log("user", user);
       if (user) {
         setUserID(user.id);
       }

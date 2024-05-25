@@ -12,7 +12,6 @@ export function SubmitButton({ children, pendingText, ...props }: Props) {
   const { pending, action } = useFormStatus();
 
   const isPending = pending && action === props.formAction;
-  console.log(props.className)
 
   return (
     <Button disabled={isPending} formAction={props.formAction} className={props.className}>

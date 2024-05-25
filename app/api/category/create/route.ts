@@ -15,7 +15,6 @@ import { Result } from "postcss";
 export async function POST(request: Request) {
   const supabase = createClient();
   const { searchParams } = new URL(request.url);
-  console.log(searchParams);
 
   const category_name = searchParams.get("category_name");
   const sub_of = searchParams.get("sub_of");

@@ -14,7 +14,6 @@ export async function createCategory(
   sub_of?: string
 ) {
   const category = await getCategory(supabase, category_name);
-  console.log('category',category)
   if (category) {
     console.log("Category already exists");
     return category;
@@ -23,7 +22,6 @@ export async function createCategory(
   if (sub_of){
     parent_category = await getCategory(supabase, sub_of);
   }
-  console.log(parent_category)
   const { data, error } = await supabase
     .from("category")
     .upsert([{ category_name, sub_of: parent_category?.category_id}])
@@ -31,7 +29,6 @@ export async function createCategory(
   if (error) {
     throw error;
   }
-  console.log(data);
   return data;
 }
 
@@ -98,7 +95,6 @@ export async function deleteCategory(
   if (error) {
     throw error;
   }
-  console.log(data)
   return data;
 }
 

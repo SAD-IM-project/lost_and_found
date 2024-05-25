@@ -66,7 +66,6 @@ export default function HomeFilter() {
         }
       );
       const data = await response.json();
-      // console.log(data);
       setObjects(data);
     } catch (error) {
       console.error("Network error:", error);
@@ -103,15 +102,12 @@ export default function HomeFilter() {
         return false;
       }
     }
-    if (object.img_url) console.log(object);
     return true;
   });
 
   React.useEffect(() => {
     getObject();
   }, [search, date, subCategories, districts_id]);
-
-  console.log(objects);
 
   return (
     <>

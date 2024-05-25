@@ -17,13 +17,10 @@ export async function POST(request: NextRequest) {
   let newMessage: any = {};
 
   const category_name = searchParams.forEach((value, key) => {
-    console.log(key, value);
     newMessage[key as keyof Message] = value as any;
   });
 
   newMessage.time = new Date();
-  
-  console.log(newMessage)
 
   if (!isMessage(newMessage)) {
     return NextResponse.json(

@@ -54,13 +54,11 @@ export default function Content({ params }: { params: { id: string } }) {
     const [comments, setComments] = useState<CommentType[]>([]);
 
     const getObjectData = async () => {
-        console.log("id", params.id)
         try {
             const response = await fetch(`/api/object/get?object_id=${params.id}`, {
                 method: "GET",
             });
             const data = await response.json();
-            console.log("data", data);
             setData(data)
         } catch (error) {
             console.error("Network error:", error);
@@ -75,7 +73,6 @@ export default function Content({ params }: { params: { id: string } }) {
                     method: "GET",
                 });
             const data = await response.json();
-            console.log(data);
             setComments(data);
         } catch (error) {
             console.error("Network error:", error);
@@ -96,7 +93,6 @@ export default function Content({ params }: { params: { id: string } }) {
         // const object_id = searchParams.get("object_id");
         const supabase = createClient();
         const { data: { user } } = await supabase.auth.getUser();
-        console.log("this is user", user);
         if (user) {
             let url = `/api/comment/create?content=${comment}&post_by=${user.id}&object_id=${params.id}`;
             const response = await fetch(url, {
@@ -109,7 +105,6 @@ export default function Content({ params }: { params: { id: string } }) {
 
             const data = await response.json();
 
-            console.log('Data:', data);
             alert("Commented successfully!");
             setComment('');
             getComments();

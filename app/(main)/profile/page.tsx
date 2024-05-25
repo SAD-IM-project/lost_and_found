@@ -22,7 +22,6 @@ export default function Page() {
       console.log(error);
       return;
     }
-    console.log(user?.user_metadata);
     if (user === null) {
       return;
     }

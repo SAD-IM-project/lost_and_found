@@ -25,7 +25,6 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
         { event: "INSERT", schema: "public", table: "message" },
         (payload) => {
           if (payload.new.object_id === channelid) {
-            console.log("Change received!", payload);
             fetchChatRoom();
           }
         }
@@ -54,10 +53,8 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
     res.data = res.data.filter(
       (element: Message) => element.object_id === channelid
     );
-    console.log(res.data);
     setMessages([...res.data]);
     setLoading(false);
-    console.log("fetching");
   };
   if (loading) {
     fetchChatRoom();
@@ -83,7 +80,6 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
       { method: "POST" }
     );
     const res = await data.json();
-    console.log(res);
     // Clear the input
     setInputValue("");
   };

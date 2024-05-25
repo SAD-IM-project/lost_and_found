@@ -39,7 +39,6 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({receiver_id, lastmessage, chan
         console.log(res.error)
         return
       }
-      console.log(res)
       setData(res)
       setLoading(false)
     }

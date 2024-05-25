@@ -152,7 +152,6 @@ export default function Content({ params }: { params: { id: string } }) {
                 const fileExt = file.name.split(".").pop();
                 const fileName = `${Math.random()}.${fileExt}`;
                 const filePath = `${fileName}`;
-                console.log("path:", filePath);
 
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from("images") // Replace with your actual bucket name
@@ -169,7 +168,6 @@ export default function Content({ params }: { params: { id: string } }) {
 
 
                 // TODO upload this publicUrl to the database
-                console.log("publicURL:", publicUrl);
                 if (publicUrl) {
                     url += `&img_url=${publicUrl}`;
                 }
@@ -196,7 +194,6 @@ export default function Content({ params }: { params: { id: string } }) {
 
             const data = await response.json();
 
-            console.log('Data:', data);
             alert("Uploaded successfully!");
             router.push(`/content/${data.object_id}`);
         } catch (error) {
@@ -241,7 +238,6 @@ export default function Content({ params }: { params: { id: string } }) {
                     }
                     return acc;
                 }, {});
-                console.log(formattedData)
                 setCategories(formattedData);
             })
             .catch(error => console.error('Error:', error));

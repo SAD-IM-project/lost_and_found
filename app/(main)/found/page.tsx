@@ -65,7 +65,6 @@ export default function FoundFilter() {
         method: "GET",
       });
       const data = await response.json();
-      // console.log(data);
       setObjects(data);
     } catch (error) {
       console.error("Network error:", error);
@@ -104,8 +103,6 @@ export default function FoundFilter() {
   React.useEffect(() => {
     getObject();
   }, [search, date, subCategories, districts_id]);
-
-  console.log(objects);
 
   return (
     <>

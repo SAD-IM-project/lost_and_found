@@ -5,7 +5,14 @@ import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import Link from "next/link";
-import { Package2, Search, CircleUser, CirclePlus, Bell, Mail } from "lucide-react";
+import {
+  Package2,
+  Search,
+  CircleUser,
+  CirclePlus,
+  Bell,
+  Mail,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { SearchForm } from "@/components/ui/searchForm";
 import { Button } from "@/components/ui/button";
@@ -22,18 +29,28 @@ export default function MainLayout({
   const supabase = createClient();
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
+  const [user, setUser] = React.useState<any>({});
   const getUser = async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    console.log(user);
     if (user) {
-      setLoading(false);
+      setUser(user);
     } else {
       router.replace("/");
     }
   };
-  getUser();
+
+  if (loading){
+    getUser();
+  }
+
+  React.useEffect(() => {
+    if (user.user_metadata) {
+      setLoading(false);
+    }
+  }, [user]);
+
   return (
     <>
       {loading ? (
@@ -74,7 +91,17 @@ export default function MainLayout({
                   className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                   style={{ zIndex: 10 }} // Ensuring it is on top
                 >
-                  <CircleUser className="h-7 w-7" />
+                  {user? (
+                    <div className="relative w-7 h-7 rounded-full bg-muted">
+                      <img
+                        src={user.user_metadata.picture}
+                        alt="User"
+                        className="rounded-full object-fill"
+                      />
+                    </div>
+                  ) : (
+                    <CircleUser className="h-7 w-7" />
+                  )}
                 </Link>
               </nav>
             </div>

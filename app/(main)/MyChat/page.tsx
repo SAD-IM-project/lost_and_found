@@ -21,7 +21,6 @@ export default function page() {
     const res = await data.json()
     const supabase = createClient();
     const me = await supabase.auth.getUser();
-    console.log(res)
     if(me.error) {
       console.log(me.error)
       return
@@ -44,9 +43,7 @@ export default function page() {
         uniqueData.push(element);
       }
     });
-    console.log(uniqueData)
     setChatroom([...uniqueData])
-    console.log(chatroom)
     setLoading(false)
     setMyid(me.data.user.id)
   }

@@ -85,7 +85,6 @@ export async function getObject(supabase: SupabaseClient, object_id: string) {
 export async function getObjects(supabase: SupabaseClient, search?: string) {
   if (search) {
     let search_arr = search?.split(" ");
-    console.log(search_arr);
     const { data, error } = await supabase.rpc("filter_objects", {
       filter_arr: search_arr,
     });
