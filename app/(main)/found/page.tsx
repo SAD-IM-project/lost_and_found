@@ -4,11 +4,8 @@
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/card';
-
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import Image from "next/image"
-import pic1 from "@/public/app_images/pic1.jpeg"
+import { Loader } from 'lucide-react';
+import ObjectCard from "@/components/ObjectCard";
 
 interface Object {
   address: string;
@@ -37,6 +34,7 @@ export default function FoundFilter() {
   const router = useRouter();
   const params = useSearchParams();
   const [objects, setObjects] = useState<Object[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // get search query
   const search = params.get('search') || '';
@@ -60,6 +58,7 @@ export default function FoundFilter() {
   };
 
   const getObject = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`/api/object/get?object_id=all&search=${search}`, 
       {
@@ -70,6 +69,8 @@ export default function FoundFilter() {
       setObjects(data);
     } catch (error) {
       console.error("Network error:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -107,56 +108,30 @@ export default function FoundFilter() {
   console.log(objects);
 
   return (
-    <div>
-      <div className="w-full bg-white overflow-y-scroll p-4 ">
-        {filteredObjects.map((post) => (
-          <Card key={post.object_id} onClick={() => handlePostClick(post.object_id)} className="mb-4 p-4 bg-gray-100 rounded cursor-pointer">
-            <div className="flex">
-              <div className="w-3/5">
-                <h3 className="font-semibold">{post.object_name}</h3>
-                <span className={`inline-block px-2 py-1 text-xs rounded ${post.type === 'lost' ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'}`}>{post.type}</span>
-                <p className="text-sm text-gray-700 mt-2">{post.description}</p>
-                <div className="mt-2">
-                  {/* if post.district_name not none, shows, else shows 'no distrcit tag' in red font, same background colour */}
-                  {post.category_name ? (
-                    <span className="inline-block bg-yellow-200 text-yellow-800 text-xs px-2 py-1 rounded-full mr-2">{post.district_name}</span>
-                  ) : (
-                    <span className="inline-block bg-yellow-100 text-black-800 text-xs px-2 py-1 rounded-full mr-2">no district tag</span>
-                  )}
-                  {/* if post.category_name not none, shows, else shows 'no category tag' in red font, same background colour */}
-                  {post.category_name ? (
-                    <span className="inline-block bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded-full mr-2">{post.category_name}</span>
-                  ) : (
-                    <span className="inline-block bg-blue-100 text-black-800 text-xs px-2 py-1 rounded-full mr-2">no category tag</span>
-                  )}
-                </div>
-              </div>
-                {/* if post.img_url is not null, show image, else says 'no image'. normalize the size of the image to the height of this card*/}
-                <div className="w-2/5 h-full relative">
-                  <AspectRatio ratio={2 / 1}>
-                      {post.img_url ? (
-                          <Image
-                              src={post.img_url}
-                              alt={`${post.object_name}的圖片`}
-                              fill={true}
-                              className="rounded-md object-contain"
-                          />
-                      ) : (
-                          <div
-                              className="flex aspect-square w-full h-full items-center justify-center rounded-md "
-                          >
-                            <div className="flex w-full h-full items-center justify-center bg-gray-200 rounded-md">
-                              <span className="text-gray-500">no image</span>
-                            </div>
-                          </div> // Replace this with your placeholder component
-                      )}
-                  </AspectRatio>
-                </div>
-            </div>
-          </Card>
-        ))}
-        {filteredObjects.length === 0 && <div className="text-center text-gray-500">沒有相關的搜尋結果</div>}
+    <>
+      <div className="bg-white overflow-y-scroll p-4 w-full h-full">
+        {loading ? (
+          <div className="flex justify-center items-center w-full h-full">
+            <Loader className="size-10 animate-spin" />
+          </div>
+        ) : (
+          filteredObjects.map((post) => (
+            <ObjectCard
+              key={post.object_id}
+              post={post}
+              handlePostClick={handlePostClick}
+              className="mb-4 p-4 bg-gray-100 rounded cursor-pointer"
+            />
+          ))
+        )}
+        {filteredObjects.length === 0 && !loading ? (
+          <div className="flex justify-center items-center w-full h-full">
+            <div className="text-center text-gray-500">沒有相關的搜尋結果</div>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
-    </div>
+    </>
   );
 }
