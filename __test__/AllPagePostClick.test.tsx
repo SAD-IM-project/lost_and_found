@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/';
-import ObjectCard from './ObjectCard';
+import ObjectCard from '@/components/ObjectCard';
 
 interface Object {
     address: string;
