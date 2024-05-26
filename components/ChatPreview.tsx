@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import Image from "next/image";
+import { CornerDownLeft } from "lucide-react";
 
 interface ChatPreviewProps {
   receiver_id: string;
@@ -11,6 +12,7 @@ interface ChatPreviewProps {
   channelid: string;
 }
 type DataType = {
+  type: "lost" | "found";
   city_name: string;
   district_name: string;
   user_name: string;
@@ -37,6 +39,7 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
 
   const [data, setData] = useState<DataType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [receiver, setReceiver] = useState<any>(null);
   const fetchObjest = async () => {
     const data = await fetch(`/api/object/get?object_id=${channelid}`, {
       method: "GET",
@@ -46,12 +49,23 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
       console.log(res.error);
       return;
     }
+    const receiver_data = await fetch(`/api/user/get?user_id=${receiver_id}`, {
+      method: "GET",
+    });
+    const receiver = await receiver_data.json();
+    setReceiver(receiver);
     setData(res);
     setLoading(false);
   };
   if (loading) {
     fetchObjest();
   }
+
+  const handleObjectClick = (e: React.MouseEvent<HTMLSpanElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/content/${channelid}`);
+  };
 
   return (
     <div
@@ -63,11 +77,12 @@ const ChatPreview: React.FC<ChatPreviewProps> = ({
         {loading ? (
           <h2 className="text-lg font-semibold">Loading...</h2>
         ) : (
-          <span className="text-3xl font-semibold">
-            {data?.object_name}{" "}
-            <span className=" text-base text-gray-500">
-              post by {data?.user_name}
+          <span className="flex flex-1 items-center text-2xl font-semibold">
+            {receiver?.user_name}{" "}
+            <span className="ml-2 text-base text-gray-500 font-normal hover:underline hover:animate-pulse" onClick={handleObjectClick}>
+              object: {data?.object_name}
             </span>
+            <CornerDownLeft className="size-3 text-gray-500" />
           </span>
         )}
         <p className="text-base text-gray-600">{lastmessage}</p>

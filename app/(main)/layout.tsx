@@ -87,7 +87,7 @@ export default function MainLayout({
               <SearchForm />
               <nav className="flex items-center gap-2 text-lg font-semibold md:text-base">
                 <Link
-                  href="profile"
+                  href="/profile"
                   className="flex items-center gap-2 text-muted-foreground text-base transition-colors hover:text-foreground cursor-pointer"
                   style={{ zIndex: 10 }} // Ensuring it is on top
                 >
