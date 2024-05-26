@@ -1,5 +1,5 @@
 "use client";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
 import ChatHeader from "@/components/ChatHeader";
 import MyMessage from "@/components/MyMessage";
 import YourMessage from "@/components/YourMessage";
@@ -77,12 +77,14 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
   }
 
   const [inputValue, setInputValue] = useState("");
+  const buttonRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
   const handleFormSubmit = async (e: FormEvent) => {
+    setInputValue("");
     e.preventDefault();
     if (inputValue.trim() === "") return;
     const supabase = createClient();
@@ -101,8 +103,13 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
     );
     const res = await data.json();
     // Clear the input
-    setInputValue("");
   };
+
+  React.useEffect(() => {
+    if (buttonRef.current) {
+      buttonRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <>
@@ -112,8 +119,8 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
         <div className="max-w-3xl mx-auto md:py-5 w-9/12 h-full">
           <div className="h-full border rounded-md flex flex-col">
             <ChatHeader channel_id={channelid} receiver_id={receiver.user_id} receiver_name={receiver.user_name}/>
-            <div className="flex-1 flex flex-col">
-              <div className=" overflow-auto w-full mt-2">
+            <div className="flex-1 flex flex-col overflow-auto">
+              <div className="w-full mt-2 max-h-full">
                 {messages.map((msg, index) =>
                   msg.receiver_id === receiver_id ? (
                     <MyMessage
@@ -131,6 +138,7 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
                     />
                   )
                 )}
+                <div ref={buttonRef}></div>
               </div>
             </div>
             <div className="p-5">
