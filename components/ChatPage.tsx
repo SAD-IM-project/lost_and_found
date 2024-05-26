@@ -111,10 +111,9 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
       ) : (
         <div className="max-w-3xl mx-auto md:py-5 w-9/12 h-full">
           <div className="h-full border rounded-md flex flex-col">
-            <ChatHeader />
+            <ChatHeader channel_id={channelid} receiver_id={receiver.user_id} receiver_name={receiver.user_name}/>
             <div className="flex-1 flex flex-col">
-              <div className="flex-1"></div>
-              <div className=" overflow-auto w-full h-5/6">
+              <div className=" overflow-auto w-full mt-2">
                 {messages.map((msg, index) =>
                   msg.receiver_id === receiver_id ? (
                     <MyMessage
