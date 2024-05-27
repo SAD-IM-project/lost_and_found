@@ -1,13 +1,14 @@
 // `app/page.tsx` is the UI for the `/` URL
 "use client";
 import Image from "next/image";
+import { Loader } from "lucide-react";
 import pic1 from "@/public/app_images/pic1.jpeg";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Trash2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import {
@@ -120,6 +121,16 @@ export default function Content({ params }: { params: { id: string } }) {
     getComments();
   }, []);
 
+  const [deleting, setDeleting] = useState(false);
+  const handleDelete = async () => {
+    if (deleting) return;
+    setDeleting(true);
+    const data = await fetch(`/api/object/delete?object_id=${params.id}`, {method: "DELETE"});
+    const res = await data.json();
+    setDeleting(false);
+    router.back();
+  }
+
   return data ? (
     <div className="flex flex-row items-start p-5 flex-wrap scroll-smooth focus:scroll-auto border-2 m-2 rounded-md" data-testid="test-object-id">
       <div className="flex w-full h-1/2 ">
@@ -174,7 +185,7 @@ export default function Content({ params }: { params: { id: string } }) {
           <CardFooter className="flex justify-end">
             {me ? (
               data.user_id === me.id ? (
-                <></>
+                deleting? <Loader/>:<Trash2 onClick={handleDelete}/>
               ) : (
                 <Button test-id="chat-button"
                   onClick={() =>
