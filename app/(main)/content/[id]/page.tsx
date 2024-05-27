@@ -107,6 +107,8 @@ export default function Content({ params }: { params: { id: string } }) {
 
       const data = await response.json();
 
+      // console.log(data);
+
       alert("Commented successfully!");
       setComment("");
       getComments();
@@ -119,8 +121,9 @@ export default function Content({ params }: { params: { id: string } }) {
   }, []);
 
   return data ? (
-    <div className="flex flex-row items-start p-5 flex-wrap scroll-smooth focus:scroll-auto border-2 m-2 rounded-md">
+    <div className="flex flex-row items-start p-5 flex-wrap scroll-smooth focus:scroll-auto border-2 m-2 rounded-md" data-testid="test-object-id">
       <div className="flex w-full h-1/2 ">
+        {/* <div data-testid="test-object-id"></div> */}
         <div className="w-1/2 h-1/3 pl-10 flex flex-col justify-center items-center">
           <div className="w-2/3 h-full relative">
             <AspectRatio ratio={1 / 1}>
@@ -173,7 +176,7 @@ export default function Content({ params }: { params: { id: string } }) {
               data.user_id === me.id ? (
                 <></>
               ) : (
-                <Button
+                <Button test-id="chat-button"
                   onClick={() =>
                     router.push(`/chatroom/${params.id}/${data.user_id}`)
                   }
@@ -252,6 +255,7 @@ export default function Content({ params }: { params: { id: string } }) {
       </div>
     </div>
   ) : (
-    <Loading />
+    // <Loading />
+    <Loading data-testid="test-object-id" />
   );
 }
