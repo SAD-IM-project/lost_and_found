@@ -34,6 +34,9 @@ import { useRef } from "react";
 
 import Select, { SingleValue, ActionMeta, GroupBase } from 'react-select';
 import { useRouter } from "next/navigation";
+import heic2any from "heic2any";
+
+
 // 定義選項類型
 interface Option {
     value: string;
@@ -57,7 +60,7 @@ img_url === "string"
 
 export default function Content({ params }: { params: { id: string } }) {
     const router = useRouter();
-    
+
     const [date, setDate] = React.useState<Date>();
     const [user, setUser] = React.useState<string | null>(null);
     const [objectName, setObjectName] = React.useState<string | null>(null);
@@ -71,8 +74,8 @@ export default function Content({ params }: { params: { id: string } }) {
     const [selectedSubCategory, setSelectedSubCategory] = React.useState<SingleValue<Option>>();
     const [subCategoryOptions, setSubCategoryOptions] = React.useState<GroupBase<Option>[]>([]);
     const [categories, setCategories] = React.useState<Record<string, Option[]>>({})
-    
-    
+
+
     //Location
     const [selectedCity, setSelectedCity] = React.useState<SingleValue<Option>>();
     const [selectedDistrict, setSelectedDistrict] = React.useState<SingleValue<Option>>();
@@ -90,20 +93,38 @@ export default function Content({ params }: { params: { id: string } }) {
     const handleFileChange = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        const file = event.target.files?.[0];
+        let file = event.target.files?.[0];
 
         if (!file) return;
+
+        // Check if the file is HEIC
+        if (file.type === "image/heic") {
+            try {
+                const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg" });
+                if (Array.isArray(convertedBlob)) {
+                    // In case the conversion library returns an array of Blobs
+                    file = new File([convertedBlob[0]], file.name.replace(/\.heic$/i, ".jpg"), { type: "image/jpeg" });
+                } else {
+                    file = new File([convertedBlob], file.name.replace(/\.heic$/i, ".jpg"), { type: "image/jpeg" });
+                }
+            } catch (error) {
+                console.error("Error converting HEIC file:", error);
+                alert("Error converting HEIC file. Please try another image format.");
+                return;
+            }
+        }
 
         if (file.type.split("/")[0] !== "image") {
             alert("Invalid file type. Please upload an image file.");
             return;
         }
+
         setFile(file);
     };
 
     const handleMainCategoryChange = (newSelectedMainCategory: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
         console.log(newSelectedMainCategory?.label, newSelectedMainCategory?.value)
-        if(newSelectedMainCategory){
+        if (newSelectedMainCategory) {
             const subCategories = {
                 label: newSelectedMainCategory.label,
                 options: categories[newSelectedMainCategory.value] || []
@@ -147,7 +168,7 @@ export default function Content({ params }: { params: { id: string } }) {
 
                 throw new Error("Missing required fields");
             }
-            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory? selectedSubCategory.label: selectedMainCategory?.label}&happen_time=${date.toISOString()}`;
+            let url = `/api/object/create?object_name=${objectName}&description=${description}&post_by=${user.id}&in_district=${selectedDistrict.value}&type=${lostFound}&category_id=${selectedSubCategory ? selectedSubCategory.label : selectedMainCategory?.label}&happen_time=${date.toISOString()}`;
             if (file) {
                 const fileExt = file.name.split(".").pop();
                 const fileName = `${Math.random()}.${fileExt}`;
@@ -173,17 +194,17 @@ export default function Content({ params }: { params: { id: string } }) {
                 }
 
             }
-            
+
 
 
             // Make a POST request to the API
             if (address) {
                 url += `&address=${address}`;
             }
-        
 
 
-            
+
+
             const response = await fetch(url, {
                 method: 'POST'
             });
@@ -375,8 +396,8 @@ export default function Content({ params }: { params: { id: string } }) {
                     <CardFooter>
                         <Button type="submit" size="sm" className="ml-auto gap-1.5"
                             onClick={handleSubmit} disabled={uploading}>
-                            {uploading? "Uploading...": "Submit"}
-                            {uploading? <Loader className="size-3.5 animate-spin"/>:<ArrowUpFromLine className="size-3.5" />}
+                            {uploading ? "Uploading..." : "Submit"}
+                            {uploading ? <Loader className="size-3.5 animate-spin" /> : <ArrowUpFromLine className="size-3.5" />}
                         </Button>
                     </CardFooter>
                 </Card>

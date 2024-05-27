@@ -7,21 +7,21 @@ import Loading from '@/components/Loading'
 export default function page() {
 
   const [chatroom, setChatroom] = React.useState([{
-      sender_id: 'user1',
-      content: 'Hello',
-      object_id: '1',
-      receiver_id: 'user2'
+    sender_id: 'user1',
+    content: 'Hello',
+    object_id: '1',
+    receiver_id: 'user2'
 
-    }])
+  }])
   const [myid, setMyid] = React.useState('')
   const [loading, setLoading] = React.useState(true)
 
   const fetchChatRoom = async () => {
-    const data = await fetch('/api/message/get', {method: "GET"})
+    const data = await fetch('/api/message/get', { method: "GET" })
     const res = await data.json()
     const supabase = createClient();
     const me = await supabase.auth.getUser();
-    if(me.error) {
+    if (me.error) {
       console.log(me.error)
       return
     }
@@ -29,7 +29,7 @@ export default function page() {
       console.log(res.error)
       return
     }
-    
+
 
 
     res.data = res.data.filter((element: Message) => element.sender_id === me.data.user.id || element.receiver_id === me.data.user.id)
@@ -48,20 +48,19 @@ export default function page() {
     setMyid(me.data.user.id)
   }
 
-  if (loading)
-  {
+  if (loading) {
     fetchChatRoom()
   }
   return (
     <>
-    {loading? <Loading/> : 
-    <div className='w-full h-full flex flex-col items-center overflow-auto'>
-      {chatroom.map((chat) => (
-        <ChatPreview key={chat.object_id+chat.receiver_id} channelid={chat.object_id} lastmessage={chat.content} receiver_id={chat.sender_id== myid? chat.receiver_id: chat.sender_id} />
-      ))}
-    </div>
-  }
+      {loading ? <Loading /> :
+        <div className='w-full h-full flex flex-col items-center overflow-auto'>
+          {chatroom.map((chat) => (
+            <ChatPreview key={chat.object_id + chat.receiver_id} channelid={chat.object_id} lastmessage={chat.content} receiver_id={chat.sender_id == myid ? chat.receiver_id : chat.sender_id} />
+          ))}
+        </div>
+      }
     </>
-    
+
   )
 }

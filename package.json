@@ -27,6 +27,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "geist": "^1.2.1",
+    "heic2any": "^0.0.4",
     "jest-fetch-mock": "^3.0.3",
     "lucide-react": "^0.379.0",
     "next": "latest",
