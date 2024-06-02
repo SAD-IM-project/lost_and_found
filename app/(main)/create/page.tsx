@@ -102,7 +102,6 @@ export default function Content({ params }: { params: { id: string } }) {
     };
 
     const handleMainCategoryChange = (newSelectedMainCategory: SingleValue<Option>, actionMeta: ActionMeta<Option>) => {
-        console.log(newSelectedMainCategory?.label, newSelectedMainCategory?.value)
         if(newSelectedMainCategory){
             const subCategories = {
                 label: newSelectedMainCategory.label,
@@ -140,7 +139,6 @@ export default function Content({ params }: { params: { id: string } }) {
         const supabase = createClient();
 
         const { data: { user } } = await supabase.auth.getUser();
-        console.log("this is user", user);
 
         try {
             if (!(objectName && description && user && selectedDistrict && date && lostFound && (selectedSubCategory || selectedMainCategory))) {
@@ -158,7 +156,6 @@ export default function Content({ params }: { params: { id: string } }) {
                     .upload(filePath, file);
 
                 if (uploadError) {
-                    console.log(uploadError);
                     throw uploadError;
                 }
 

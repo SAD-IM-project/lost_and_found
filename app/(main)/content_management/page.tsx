@@ -17,10 +17,6 @@ import { createClient } from "@/utils/supabase/client";
 export default function Test() {
   const handleOnClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
-      console.log(event.currentTarget.name);
-      console.log(
-        onclick_api[event.currentTarget.name as keyof typeof onclick_api]
-      );
       let api =
         onclick_api[event.currentTarget.name as keyof typeof onclick_api].api +
         "?";
@@ -36,7 +32,6 @@ export default function Test() {
 
       const response = await fetch(api, { method: method });
       const data = await response.json();
-      console.log(data)
       if (!response.ok) {
         // console.log("Failed to create city district");
       } else {
@@ -50,7 +45,6 @@ export default function Test() {
 
   const addAllCityDistrict = async () => {
     try {
-      console.log("clicked");
       for (const city in area_data) {
         for (const district of area_data[city as keyof typeof area_data]) {
           const response = await fetch(

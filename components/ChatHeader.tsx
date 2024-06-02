@@ -26,11 +26,9 @@ export default function ChatHeader({
       method: "GET",
     });
     const object = await res.json();
-    console.log(object);
     setObject(object);
     setLoading(false);
   };
-  console.log(channel_id, receiver_id, receiver_name);
 
   const handleClick = () => {
     setRouterLoading(true);

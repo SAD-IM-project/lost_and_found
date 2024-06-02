@@ -22,11 +22,11 @@ export default function page() {
     const supabase = createClient();
     const me = await supabase.auth.getUser();
     if(me.error) {
-      console.log(me.error)
+      // console.log(me.error)
       return
     }
     if (res.error) {
-      console.log(res.error)
+      // console.log(res.error)
       return
     }
     
