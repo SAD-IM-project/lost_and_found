@@ -110,11 +110,11 @@ describe("Content Component", () => {
   };
   
 
-  // it("renders loading initially", () => {
-  //   render(<Content params={{ id: "test-object-id" }} />);
-  //   // expect(screen.getByText(/loading/i)).toBeInTheDocument();
-  //   expect(screen.getByTestId('test-object-id')).toBeInTheDocument();
-  // });
+  it("renders loading initially", () => {
+    render(<Content params={{ id: "test-object-id" }} />);
+    // expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByTestId('test-object-id')).toBeInTheDocument();
+  });
 
   it("renders object data and comments after fetch", async () => {
     fetchMock.mockResponses(
@@ -188,35 +188,35 @@ describe("Content Component", () => {
     // alertMock.mockRestore();
   });
 
-  // it("conditionally renders chat button for authenticated user", async () => {
-  //   fetchMock.mockResponses(
-  //     [JSON.stringify(mockObjectData), { status: 200 }],
-  //     [JSON.stringify(mockComments), { status: 200 }]
-  //   );
+  it("conditionally renders chat button for authenticated user", async () => {
+    fetchMock.mockResponses(
+      [JSON.stringify(mockObjectData), { status: 200 }],
+      [JSON.stringify(mockComments), { status: 200 }]
+    );
 
-  //   const mockUser = { id: "user123" };
-  //   const mockSupabase = {
-  //     auth: {
-  //       getUser: jest.fn().mockResolvedValue({ data: { user: mockUser } }),
-  //     },
-  //   };
+    const mockUser = { id: "user123" };
+    const mockSupabase = {
+      auth: {
+        getUser: jest.fn().mockResolvedValue({ data: { user: mockUser } }),
+      },
+    };
 
-  //   (createClient as jest.Mock).mockReturnValue(mockSupabase);
+    (createClient as jest.Mock).mockReturnValue(mockSupabase);
 
-  //   const { getByText } = render(
-  //     <Content params={{ id: "test-object-id" }} />
-  //   );
+    const { getByText } = render(
+      <Content params={{ id: "test-object-id" }} />
+    );
 
-  //   await waitFor(() => {
-  //     expect(screen.getByText("手機")).toBeInTheDocument();
-  //   });
+    await waitFor(() => {
+      expect(screen.getByText("手機")).toBeInTheDocument();
+    });
 
-  //   // const chatButton = getByText("Go to chat");
-  //   const chatButton = screen.getByTestId("chat-button");
-  //   fireEvent.click(chatButton);
+    // const chatButton = getByText("Go to chat");
+    const chatButton = screen.getByTestId("chat-button");
+    fireEvent.click(chatButton);
 
-  //   expect(mockRouter.push).toHaveBeenCalledWith(
-  //     `/chatroom/test-object-id/user123`
-  //   );
-  // });
+    // expect(mockRouter.push).toHaveBeenCalledWith(
+    //   `/chatroom/test-object-id/user123`
+    // );
+  });
 });

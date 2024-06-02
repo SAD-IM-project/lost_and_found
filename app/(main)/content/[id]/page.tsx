@@ -153,53 +153,55 @@ export default function Content({ params }: { params: { id: string } }) {
             </AspectRatio>
           </div>
         </div>
-        <Card className="w-1/2 h-full dark:bg-white dark:text-black">
-          <CardHeader>
-            <CardTitle>{data.object_name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>
-              <b>物品ID：</b> {params.id}
-            </p>
-            <p>
-              <b>尋獲時間：</b>
-              {new Date(data.happen_time).toISOString().split("T")[0]}
-            </p>
-            <p>
-              <b>尋獲地點：</b>
-              {data.city_name} {data.district_name}
-            </p>
-            <p>
-              <b>物品種類：</b>
-              {data.category_name}
-            </p>
-            <p>
-              <b>尋獲人：</b>
-              {data.user_name}
-            </p>
-            <p>
-              <b>描述：</b>
-              {data.description}
-            </p>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            {me ? (
-              data.user_id === me.id ? (
-                deleting? <Loader/>:<Trash2 onClick={handleDelete}/>
+        <div data-testid="chat-button"  className="w-1/2 h-full dark:bg-white dark:text-black">
+          <Card>
+            <CardHeader>
+              <CardTitle>{data.object_name}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                <b>物品ID：</b> {params.id}
+              </p>
+              <p>
+                <b>尋獲時間：</b>
+                {new Date(data.happen_time).toISOString().split("T")[0]}
+              </p>
+              <p>
+                <b>尋獲地點：</b>
+                {data.city_name} {data.district_name}
+              </p>
+              <p>
+                <b>物品種類：</b>
+                {data.category_name}
+              </p>
+              <p>
+                <b>尋獲人：</b>
+                {data.user_name}
+              </p>
+              <p>
+                <b>描述：</b>
+                {data.description}
+              </p>
+            </CardContent>
+            <CardFooter className="flex justify-end">
+              {me ? (
+                data.user_id === me.id ? (
+                  <></>
+                ) : (
+                  <Button test-id="chat-button"
+                    onClick={() =>
+                      router.push(`/chatroom/${params.id}/${data.user_id}`)
+                    }
+                  >
+                    Go to chat
+                  </Button>
+                )
               ) : (
-                <Button test-id="chat-button"
-                  onClick={() =>
-                    router.push(`/chatroom/${params.id}/${data.user_id}`)
-                  }
-                >
-                  Go to chat
-                </Button>
-              )
-            ) : (
-              <></>
-            )}
-          </CardFooter>
-        </Card>
+                <></>
+              )}
+            </CardFooter>
+          </Card>
+        </div>
       </div>
       <div className="w-full ml-14 border-black border-solid">
         <div className="grid my-5 w-full gap-1.5">
@@ -266,7 +268,8 @@ export default function Content({ params }: { params: { id: string } }) {
       </div>
     </div>
   ) : (
-    // <Loading />
-    <Loading data-testid="test-object-id" />
+    <div className="flex justify-center items-center h-screen" data-testid="test-object-id" >
+      <Loading/> 
+    </div>
   );
 }
