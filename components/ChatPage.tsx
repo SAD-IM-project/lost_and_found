@@ -48,6 +48,7 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      console.log(user);
       setMe(user);
     }
     const data = await fetch("/api/message/get", { method: "GET" });
@@ -106,7 +107,7 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
   };
 
   React.useEffect(() => {
-    if (buttonRef.current) {
+    if (buttonRef.current && typeof buttonRef.current.scrollIntoView === 'function') {
       buttonRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
@@ -114,7 +115,7 @@ const ChatPage: React.FC<channel> = ({ channelid, receiver_id }) => {
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading test-id="loading"/>
       ) : (
         <div className="max-w-3xl mx-auto md:py-5 w-9/12 h-full">
           <div className="h-full border rounded-md flex flex-col">

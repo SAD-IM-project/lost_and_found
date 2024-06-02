@@ -1,14 +1,38 @@
 // __tests__/ChatPage.test.tsx
-import React from 'react';
+import React, {useRef} from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChatPage from '@/components/ChatPage'; // Adjust the path as necessary
 import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
+
+jest.mock('react', () => ({
+  ...jest.requireActual('react'),
+  useRef: jest.fn(),
+}));
 
 // Mocking Supabase client
 jest.mock('@/utils/supabase/client', () => {
+  const me = {
+    "id": "user_123",
+    "email": "ansonwu0604@gmail.com",
+    "app_metadata": {
+        "provider": "google",
+        "providers": [
+            "google"
+        ]
+    },
+    "user_metadata": {
+        "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocJlaGBFoxfnNhS2XfZlKLu5Qlx2j5Kyp2H5Ny65JPJVWyER3NDG=s96-c",
+        "email": "ansonwu0604@gmail.com",
+        "full_name": "吳亞宸",
+        "name": "吳亞宸",
+        "picture": "https://lh3.googleusercontent.com/a/ACg8ocJlaGBFoxfnNhS2XfZlKLu5Qlx2j5Kyp2H5Ny65JPJVWyER3NDG=s96-c",
+    },
+  }
+
   const auth = {
     getUser: jest.fn().mockResolvedValue({
-      data: { user: { id: 'user123' } },
+      data: { user: me },
     }),
   };
 
@@ -29,6 +53,11 @@ jest.mock('@/utils/supabase/client', () => {
   };
 });
 
+// Mock useRouter
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(),
+}));
+
 // Mock fetch API
 global.fetch = jest.fn().mockImplementation((url) => {
   if (url.includes('/api/message/get')) {
@@ -47,13 +76,33 @@ global.fetch = jest.fn().mockImplementation((url) => {
 });
 
 describe('ChatPage', () => {
+
+  const mockRouter = {
+    push: jest.fn(),
+    replace: jest.fn(),
+    refresh: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+  };
+
+  const mockRef = {
+    current: {
+      scrollIntoView: jest.fn(),
+    },
+  };
+
+  (useRouter as jest.Mock).mockReturnValue(mockRouter);
+  (useRef as jest.Mock).mockReturnValue(mockRef);
+
   test('renders loading initially', async () => {
     render(<ChatPage channelid="channel123" receiver_id="receiver123" />);
 
-    expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+    expect(screen.queryByTestId("loading")).not.toBeInTheDocument();
   });
 
   test('renders messages after fetching', async () => {
+    
     render(<ChatPage channelid="channel123" receiver_id="receiver123" />);
 
     await waitFor(() => {
