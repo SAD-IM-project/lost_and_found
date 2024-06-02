@@ -58,7 +58,7 @@ describe('ObjectCard', () => {
     expect(screen.getByText('信義區')).toBeInTheDocument();
     expect(screen.getByText('手機')).toBeInTheDocument();
     expect(screen.getByText('This is a description')).toBeInTheDocument();
-    expect(screen.getByText('Lost at: 5/26/2023')).toBeInTheDocument();
+    expect(screen.getByText('Lost at: 2023/5/26')).toBeInTheDocument();
     expect(screen.getByText('At: 在我家')).toBeInTheDocument();
   });
 
