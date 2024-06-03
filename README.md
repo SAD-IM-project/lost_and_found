@@ -5,6 +5,11 @@
 
 <br/>
 
+## How to run our code
+You can choose either way to run our code.
+- Clone our repo from github [lost_and_found](https://github.com/SAD-IM-project/lost_and_found)
+- Unzip `group10_milestone4`. The project folder is `./group10_milestone4/lost_and_found`<br/>*Notice: If you choose this way, you can skip step 2 and 3 in next section.*
+
 ## Clone and run locally
 
 1. Run `npm install` to install the required modules.
@@ -22,20 +27,13 @@
 
    Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
 
-    > Notice: If you're using our supabase. You should copy the below code into `.env.local`.
-
-    ```
-    NEXT_PUBLIC_SUPABASE_URL=https://okrjiftennxipohnrbbw.supabase.co
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9rcmppZnRlbm54aXBvaG5yYmJ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTQ1NjI2NzYsImV4cCI6MjAzMDEzODY3Nn0.JuH-eYkmPYsdHxMJSyAHxPSeKuLsYads2ZXrt5EHB7c
-    ```
-
 4. You can now run the Next.js local development server:
 
    ```bash
    npm run dev
    ```
 
-   The starter kit should now be running on [localhost:8888](http://localhost:8888/).
+   The website should now be running on [localhost:8888](http://localhost:8888/).
 
 > Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
 
